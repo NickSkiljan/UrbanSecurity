@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "728841697571",
+    "firebase_url": "https://appfirebaseproject-e760b.firebaseio.com",
+    "project_id": "appfirebaseproject-e760b",
+    "storage_bucket": "appfirebaseproject-e760b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728841697571:android:0df400c25abf0f2c",
+        "android_client_info": {
+          "package_name": "edu.osu.urban_security.security_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "728841697571-s005dnlamiljb44cfbdel0m120adhsk7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.osu.urban_security.security_app",
+            "certificate_hash": "bf345c0edd8ee3d546c36f468b262be922542777"
+          }
+        },
+        {
+          "client_id": "728841697571-kurfgtm8dp19ok3fd256k51gj0g43sau.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIc80jeTP_sIMSzdZqSqiOLzrJhkQYQao"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "728841697571-kurfgtm8dp19ok3fd256k51gj0g43sau.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -133,7 +133,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     private void onAuthSuccess(FirebaseUser user) {
         // Go to MainActivity
-        startActivity(new Intent(SignInActivity.this, LocationActivity.class));
+        startActivity(new Intent(SignInActivity.this, WriteActivity.class));
         finish();
     }
 

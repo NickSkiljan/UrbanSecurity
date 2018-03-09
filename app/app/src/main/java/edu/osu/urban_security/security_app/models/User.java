@@ -12,9 +12,9 @@ public class User {
     public String name;
     public String phoneNumber;
 
-    public double latitude;
-    public double longitude;
-    public double altitude;
+    public String latitude;
+    public String longitude;
+    public String altitude;
 
     public boolean moving;
     public String address;
@@ -26,6 +26,17 @@ public class User {
     public User(String name, String phoneNumber) {
         this.name = name;
         this.phoneNumber = phoneNumber;
+    }
+
+    public User(String name, String phoneNumber, String latitude, String longitude, String altitude,
+                boolean moving, String address) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.name = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
+        this.moving = moving;
+        this.address = address;
     }
 
 }

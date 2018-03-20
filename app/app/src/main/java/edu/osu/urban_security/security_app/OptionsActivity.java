@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 /**
  * Created by dsmil on 3/9/2018.
  */
@@ -17,10 +19,14 @@ import android.widget.Button;
 public class OptionsActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button mSignOutButton;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
+
         setContentView(R.layout.activity_options);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle("");
@@ -60,11 +66,10 @@ public class OptionsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void signOut(){
-
+        mAuth.signOut();
         Intent intent_1 = new Intent(this,SignInActivity.class);
         startActivity(intent_1);
         overridePendingTransition(R.anim.enter2,R.anim.exit2);
-
     }
 
     @Override

@@ -15,7 +15,7 @@
     <string name="send_altitude">Send Altitude</string>
     <string name="send_address">Send Address</string>
     <string name="sign_up">Sign Up</string>
-    <string name="sign_out">Sign Out</string>
+    <string name="sign_out">Delete Account</string>
     <string name="options">Options</string>
     <string name="main_page">Main Page</string>
 </resources>

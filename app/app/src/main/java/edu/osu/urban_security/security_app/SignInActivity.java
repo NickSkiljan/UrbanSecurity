@@ -60,7 +60,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onStart() {
         super.onStart();
-
         // Check auth on Activity start
         if (isSignedIn(mAuth.getCurrentUser())) {
             onAuthSuccess(mAuth.getCurrentUser());
@@ -113,6 +112,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                             writeNewUser(user.getUid(), name, phoneNumber);
                             onAuthSuccess(user);
                         } else {
+                            Log.e(TAG, String.valueOf(task.getException()));
                             Toast.makeText(SignInActivity.this, "Sign Up Failed",
                                     Toast.LENGTH_SHORT).show();
                         }

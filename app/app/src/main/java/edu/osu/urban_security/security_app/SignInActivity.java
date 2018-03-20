@@ -109,6 +109,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInAnonymously: success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d(TAG, "onComplete: " + user.getUid());
                             writeNewUser(user.getUid(), name, phoneNumber);
                             onAuthSuccess(user);
                         } else {
@@ -169,7 +170,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     // [START basic_write]
     private void writeNewUser(String userId, String name, String phoneNumber) {
         User user = new User(name, phoneNumber);
-
         mDatabase.child("users").child(userId).setValue(user);
     }
     // [END basic_write]

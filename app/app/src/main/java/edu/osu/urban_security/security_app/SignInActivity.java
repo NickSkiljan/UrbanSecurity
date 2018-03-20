@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 /**
  * Created by sunnypatel on 3/7/18.
  */
@@ -53,12 +52,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
         // Click listeners
         mSignUpButton.setOnClickListener(this);
-
     }
-
-
-
-
 
     @Override
     public void onStart() {
@@ -142,6 +136,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         // Go to MainActivity
         startActivity(new Intent(SignInActivity.this, SafetyViewActivity.class));
         overridePendingTransition(R.anim.enter1,R.anim.exit1);
+        // finish();
+        // startActivity(new Intent(SignInActivity.this, LocationActivity.class));
     }
 
     private boolean isSignedIn(FirebaseUser user) {

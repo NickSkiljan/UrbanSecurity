@@ -6,15 +6,15 @@ import com.google.firebase.database.IgnoreExtraProperties;
  * Created by sunnypatel on 3/7/18.
  */
 
-//@IgnoreExtraProperties
+@IgnoreExtraProperties
 public class User {
 
     public String name;
     public String phoneNumber;
 
-    public double latitude;
-    public double longitude;
-    public double altitude;
+    public String latitude;
+    public String longitude;
+    public String altitude;
 
     public boolean moving;
     public String address;
@@ -26,6 +26,11 @@ public class User {
     public User(String name, String phoneNumber) {
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.latitude = "n/a";
+        this.longitude = "n/a";
+        this.altitude = "n/a";
+        this.address = "n/a";
+        this.moving = false;
     }
 
 }

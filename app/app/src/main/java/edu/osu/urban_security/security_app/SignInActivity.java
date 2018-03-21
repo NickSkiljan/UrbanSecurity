@@ -3,8 +3,12 @@ package edu.osu.urban_security.security_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,7 +60,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onStart() {
         super.onStart();
-
         // Check auth on Activity start
         if (isSignedIn(mAuth.getCurrentUser())) {
             onAuthSuccess(mAuth.getCurrentUser());
@@ -106,9 +109,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInAnonymously: success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d(TAG, "onComplete: " + user.getUid());
                             writeNewUser(user.getUid(), name, phoneNumber);
                             onAuthSuccess(user);
                         } else {
+                            Log.e(TAG, String.valueOf(task.getException()));
                             Toast.makeText(SignInActivity.this, "Sign Up Failed",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -133,8 +138,10 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     private void onAuthSuccess(FirebaseUser user) {
         // Go to MainActivity
-        startActivity(new Intent(SignInActivity.this, LocationActivity.class));
-        finish();
+        startActivity(new Intent(SignInActivity.this, SafetyViewActivity.class));
+        overridePendingTransition(R.anim.enter1,R.anim.exit1);
+        // finish();
+        // startActivity(new Intent(SignInActivity.this, LocationActivity.class));
     }
 
     private boolean isSignedIn(FirebaseUser user) {
@@ -163,7 +170,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     // [START basic_write]
     private void writeNewUser(String userId, String name, String phoneNumber) {
         User user = new User(name, phoneNumber);
-
         mDatabase.child("users").child(userId).setValue(user);
     }
     // [END basic_write]

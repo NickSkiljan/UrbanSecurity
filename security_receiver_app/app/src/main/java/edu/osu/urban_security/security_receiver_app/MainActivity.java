@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private DatabaseReference mDatabase;
     private DatabaseReference mSOS;
-    private String userId;
+    private DatabaseReference mUsers;
     private ArrayList<String> SOSs = new ArrayList<>();
     // [END declare_database_ref]
 
@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mSOS = mDatabase.child("users");
+        mSOS = mDatabase.child("sos");
+        mUsers = mDatabase.child("users");
 
         Thread t = new Thread() {
             @Override
@@ -62,13 +63,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateList() {
 
-        mSOS.addListenerForSingleValueEvent(new ValueEventListener() {
+        mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    //String userid = snapshot.getValue().toString();
+
+
                     User user = snapshot.getValue(User.class);
                     SOSs.add(user.name);
-                    System.out.println(user.name);
+                    //System.out.println(user.name);
                 }
             }
             @Override

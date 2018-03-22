@@ -49,7 +49,7 @@ public class RSA {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public String encrypt(String text) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
-        // grab cipher
+        // grab cipher  f
         cipher1 = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
         cipher1.init(Cipher.ENCRYPT_MODE,getPublicKey());
         //
@@ -58,7 +58,7 @@ public class RSA {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public String decrpt(String text) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public String decrypt(String text) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         cipher2 = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
         cipher2.init(Cipher.DECRYPT_MODE,getPrivateKey());
         decrypted = cipher2.doFinal(text.getBytes());

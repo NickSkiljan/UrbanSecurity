@@ -2,6 +2,8 @@ package edu.osu.urban_security.security_receiver_app;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Ravi Tamada on 07/10/16.
  * www.androidhive.info
@@ -17,7 +19,9 @@ public class User {
     public boolean moving;
     public String phone_number;
     public String address;
+
     public String userId;
+    public Timestamp timestamp;
 
 
     // Default constructor required for calls to

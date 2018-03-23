@@ -12,15 +12,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    // [START declare_database_ref]
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    //Declare database references
     private DatabaseReference mDatabase;
     private DatabaseReference mSOS;
     private DatabaseReference mUsers;
+
+    //Create empty list of users
     private ArrayList<User> SOSs = new ArrayList<>();
 
     @Override
@@ -28,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Get database references
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mSOS = mDatabase.child("sos");
         mUsers = mDatabase.child("users");
@@ -59,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void update() {
 
-        //SOSs.clear();
-
         mSOS.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -76,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
                             if (user != null) {
                                 user.userId = snapshot.getKey().toString();
+                                user.timestamp = createTimestamp(snapshot.getValue().toString());
 
                                 int index = -1;
                                 for(int x = 0; x < SOSs.size(); x++) {
@@ -110,17 +117,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //return SOSs;
 
-
-
-//        LinearLayout linearLayout = new LinearLayout(this);
-//        ListView SOSListView = new ListView(this);
-//        SOSListView.setPadding(20, 300, 20, 100);
 
         UsersAdapter adapter = new UsersAdapter(this, SOSs);
         ListView listView = findViewById(R.id.lvUsers);
         listView.setAdapter(adapter);
+    }
+
+    //Convert database string to timestamp
+    public Timestamp createTimestamp(String ts) {
+
+        Timestamp timestamp;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
+            Date parsedTimeStamp = dateFormat.parse(ts);
+            timestamp = new Timestamp(parsedTimeStamp.getTime());
+
+
+        } catch (Exception e){
+            System.out.println("Parse error: " + e);
+            timestamp = new Timestamp(new java.util.Date().getTime());
+        }
+
+        return timestamp;
     }
 
 }

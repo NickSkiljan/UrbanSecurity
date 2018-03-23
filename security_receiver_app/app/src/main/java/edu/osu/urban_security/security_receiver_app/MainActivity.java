@@ -2,12 +2,9 @@ package edu.osu.urban_security.security_receiver_app;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,8 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private DatabaseReference mSOS;
     private DatabaseReference mUsers;
-    private ArrayList<String> SOSs = new ArrayList<>();
-    // [END declare_database_ref]
+    private ArrayList<User> SOSs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                updateList();
+                                update();
                             }
                         });
                     }
@@ -61,18 +57,52 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void updateList() {
+    public void update() {
 
-        mUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+        //SOSs.clear();
+
+        mSOS.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    //String userid = snapshot.getValue().toString();
 
+                    DatabaseReference userId = mUsers.child(snapshot.getKey());
+                    userId.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
 
-                    User user = snapshot.getValue(User.class);
-                    SOSs.add(user.name);
-                    //System.out.println(user.name);
+                            System.out.println(snapshot.getKey());
+                            User user = snapshot.getValue(User.class);
+
+                            if (user != null) {
+                                user.userId = snapshot.getKey().toString();
+
+                                int index = -1;
+                                for(int x = 0; x < SOSs.size(); x++) {
+                                    System.out.println("#1: " + SOSs.get(x).userId);
+                                    System.out.println("#2: " + user.userId);
+
+                                    if (SOSs.get(x).userId.equals(user.userId)) {
+                                        index = x;
+                                        x = SOSs.size();
+                                    }
+                                }
+
+                                if (index  < 0) {
+                                    SOSs.add(0, user);
+                                } else {
+                                    SOSs.remove(index);
+                                    SOSs.add(0, user);
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                                System.out.println("Error: " + databaseError);
+                            }
+                    });
                 }
             }
             @Override
@@ -81,19 +111,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //return SOSs;
 
 
-        LinearLayout linearLayout = new LinearLayout(this);
-        ListView SOSListView = new ListView(this);
-        SOSListView.setPadding(20, 300, 20, 100);
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, SOSs);
-        SOSListView.setAdapter(adapter);
+//        LinearLayout linearLayout = new LinearLayout(this);
+//        ListView SOSListView = new ListView(this);
+//        SOSListView.setPadding(20, 300, 20, 100);
 
-
-        linearLayout.addView(SOSListView);
-        this.setContentView(linearLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        UsersAdapter adapter = new UsersAdapter(this, SOSs);
+        ListView listView = findViewById(R.id.lvUsers);
+        listView.setAdapter(adapter);
     }
-
 
 }

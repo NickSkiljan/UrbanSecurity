@@ -17,6 +17,7 @@ public class User {
     public boolean moving;
     public String phone_number;
     public String address;
+    public String userId;
 
 
     // Default constructor required for calls to

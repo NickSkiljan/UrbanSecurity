@@ -79,14 +79,13 @@ public class MainActivity extends AppCompatActivity {
 
                                 int index = -1;
                                 for(int x = 0; x < SOSs.size(); x++) {
-                                    System.out.println("#1: " + SOSs.get(x).userId);
-                                    System.out.println("#2: " + user.userId);
-
                                     if (SOSs.get(x).userId.equals(user.userId)) {
                                         index = x;
                                         x = SOSs.size();
                                     }
                                 }
+
+                                //Create comparator to compare timestamps
 
                                 if (index  < 0) {
                                     SOSs.add(0, user);

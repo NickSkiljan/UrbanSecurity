@@ -21,7 +21,6 @@ public class User {
     public String address;
 
     public String userId;
-    public Timestamp timestamp;
 
 
     // Default constructor required for calls to

@@ -67,22 +67,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void update() {
 
-        mSOS.addListenerForSingleValueEvent(new ValueEventListener() {
+        mSOS.orderByValue().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
 
                     DatabaseReference userId = mUsers.child(snapshot.getKey());
                     userId.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
 
-                            System.out.println(snapshot.getKey());
                             User user = snapshot.getValue(User.class);
 
                             if (user != null) {
                                 user.userId = snapshot.getKey().toString();
-                                user.timestamp = createTimestamp(snapshot.getValue().toString());
 
                                 int index = -1;
                                 for(int x = 0; x < SOSs.size(); x++) {
@@ -91,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
                                         x = SOSs.size();
                                     }
                                 }
-
-                                //Create comparator to compare timestamps
 
                                 if (index  < 0) {
                                     SOSs.add(0, user);

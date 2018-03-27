@@ -44,18 +44,30 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="142dp"
-        android:layout_height="98dp"
+        android:layout_width="300dp"
+        android:layout_height="86dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="56dp"
-        android:text="You Are Safe!"
-        android:textAlignment="center"
-        android:textSize="36sp"
-        android:textStyle="bold"
+        android:text="Location:"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+
+    <Button
+        android:id="@+id/button_push_sos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -24,6 +24,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import edu.osu.urban_security.security_app.models.Globals;
+import edu.osu.urban_security.security_app.models.User;
+
 public class SafetyViewActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
@@ -34,6 +37,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    Globals g = Globals.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,11 +123,11 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void pushSOS() {
-        FirebaseUser user = mAuth.getCurrentUser();
+        User user = g.user;
         String lat;
         String lng;
         String alt;
-        mDatabase.child("sos").child(user.getUid()).setValue("test-sos");
-        mDatabase.child("users").child(user.getUid()).setValue("test-update");
+        // TODO: push timestamp to firebase
+        mDatabase.child("sos").child(mAuth.getUid()).child("timestamp").setValue("");
     }
 }

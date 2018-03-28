@@ -17,6 +17,8 @@ public class LocationActivity extends AppCompatActivity {
 
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+    public static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 2;
+    public static final int MY_PERMISSIONS_REQUEST_PROCESS_OUTGOING_CALLS = 3;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -37,6 +39,14 @@ public class LocationActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_PHONE_STATE},
+                MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.PROCESS_OUTGOING_CALLS},
+                MY_PERMISSIONS_REQUEST_PROCESS_OUTGOING_CALLS);
 
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

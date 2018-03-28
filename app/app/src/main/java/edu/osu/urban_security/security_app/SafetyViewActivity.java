@@ -137,7 +137,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         super.onResume();
         SharedPreferences sharedPreferences = getSharedPreferences(OutgoingCallDetector.MY_PREF,MODE_PRIVATE);
         String number = sharedPreferences.getString(OutgoingCallDetector.NUMBER_KEY,"No Value Found");
-        t.setText(number);
+        //t.setText(number);
         Log.d("APP RESUMED", number);
     }
     @Override
@@ -175,7 +175,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                             mDatabase.child("sos").child(mAuth.getUid()).child("timestamp").setValue(timestamp);
 
                             // to manually test if the current user is actually the current user
-                            Log.d(TAG, "pushSOS(): User's Name: " + user.name);
+                            //Log.d(TAG, "pushSOS(): User's Name: " + user.name);
                             //mDatabase.child("sos").child(user.getUid()).setValue("test-sos");
                             //mDatabase.child("users").child(user.getUid()).setValue("test-update");
                         }
@@ -183,7 +183,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void initiateCall(){
+    private void initiateCall() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.d("PERMISSION NOT GRANTED", "phone call");
@@ -192,4 +192,5 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
             callIntent.setData(Uri.parse("tel:16143793483"));
             startActivity(callIntent);
         }
+    }
 }

@@ -147,11 +147,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 DataSnapshot childSnapshot = dataSnapshot.child("users");
-                User userObj = childSnapshot.child(mAuth.getUid()).getValue(User.class);
+                //User userObj = childSnapshot.child(mAuth.getUid()).getValue(User.class);
                 // User(name, phoneNumber, latitude, longitude, altitude, address, moving)
 //                g.user = new User(user.name, user.phoneNumber, user.latitude, user.longitude,
 //                        user.altitude, user.address, user.moving);
-                g.user = userObj;
+                //g.user = userObj;
             }
 
             @Override

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import edu.osu.urban_security.security_app.models.Globals;
 import edu.osu.urban_security.security_app.models.User;
 
-public class SafetyViewActivity extends AppCompatActivity implements View.OnClickListener {
+public class SafetyViewActivity extends AppCompatActivity implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
@@ -40,6 +41,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
     private static final String TAG = "SafetyViewActivity";
 
     private FusedLocationProviderClient mFusedLocationClient;
+    private Task<Location> mLastLocation;
     private Button SOSPushButton;
 
     private DatabaseReference mDatabase;
@@ -58,7 +60,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        t = (TextView)findViewById(R.id.textView);
+        t = (TextView) findViewById(R.id.textView);
 
         //Create intent and start listening service
         Intent intent = new Intent(this, CallDetectionService.class);
@@ -80,11 +82,12 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                 new String[]{android.Manifest.permission.CALL_PHONE},
                 MY_PERMISSIONS_REQUEST_CALL_PHONE);
 
+
         SOSPushButton.setOnClickListener(this);
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            t.setText("PERMISSION NOT GRANTED");
+            t.setText("Location Services Disabled");
         } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -110,6 +113,23 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main_page, menu);
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 200: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // PERMISSION GRANTED
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        mLastLocation = mFusedLocationClient.getLastLocation();
+                    }
+                } else {
+                    // PERMISSION DENIED
+                    t.setText("Location Services Disabled");
+                }
+            }
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -150,26 +170,35 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void pushSOS() {
-        final FirebaseUser user = mAuth.getCurrentUser();
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            t.setText("PERMISSION NOT GRANTED");
-        } else {
+//        final FirebaseUser user = mAuth.getCurrentUser();
+
+        boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+        if(permissionGranted) {
+            // {Some Code}
+            t.setText("");
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
             mFusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
+                            User user = g.user;
+                            String timestamp = "test-timestamp";
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
+                                Log.d(TAG, "onSuccess: Location found...");
                                 String lat = "Latitude: " + Double.toString(location.getLatitude()) + "\n";
                                 String lng = "Longitude: " + Double.toString(location.getLongitude()) + "\n";
                                 String alt = "Altitude: " + Double.toString(location.getAltitude()) + "\n";
                                 t.setText(lat+lng+alt);
+                                user.latitude = lat;
+                                user.longitude = lng;
+                                user.altitude = alt;
+                                mDatabase.child("users").child(mAuth.getUid()).setValue(user);
+                            } else {
+                                Log.d(TAG, "onSuccess: Location null. Try opening Google Maps and then try pushing the button again.");
                             }
-                            User user = g.user;
-                            String timestamp = "test-timestamp";
 
                             // TODO: push timestamp to firebase
                             mDatabase.child("sos").child(mAuth.getUid()).child("timestamp").setValue(timestamp);
@@ -178,8 +207,14 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                             //Log.d(TAG, "pushSOS(): User's Name: " + user.name);
                             //mDatabase.child("sos").child(user.getUid()).setValue("test-sos");
                             //mDatabase.child("users").child(user.getUid()).setValue("test-update");
+                            Log.d(TAG, "onSuccess: Updated user's location and pushed SOS");
                         }
                     });
+
+        } else {
+            t.setText("Location Services Disabled");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+            pushSOS();
         }
     }
 

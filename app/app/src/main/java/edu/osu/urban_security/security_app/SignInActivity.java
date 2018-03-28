@@ -166,7 +166,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         overridePendingTransition(R.anim.enter1,R.anim.exit1);
         // finish();
         // startActivity(new Intent(SignInActivity.this, LocationActivity.class));
->>>>>>> cf7e8f85024e6e7bbb9966177d70ac6ca85dd288
     }
 
     private boolean isSignedIn(FirebaseUser user) {

@@ -124,6 +124,6 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         String lng;
         String alt;
         mDatabase.child("sos").child(user.getUid()).setValue("test-sos");
-        mDatabase.child("users").child(user.getUid()).setValue()
+        mDatabase.child("users").child(user.getUid()).setValue("test-update");
     }
 }

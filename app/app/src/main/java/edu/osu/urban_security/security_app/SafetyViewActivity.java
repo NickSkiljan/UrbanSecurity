@@ -1,15 +1,18 @@
 package edu.osu.urban_security.security_app;
 
 import android.*;
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +32,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+    public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 2;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private Button SOSPushButton;
@@ -65,6 +69,10 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         ActivityCompat.requestPermissions(this,
                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{android.Manifest.permission.CALL_PHONE},
+                MY_PERMISSIONS_REQUEST_CALL_PHONE);
 
         SOSPushButton.setOnClickListener(this);
 
@@ -124,21 +132,53 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         SharedPreferences sharedPreferences = getSharedPreferences(OutgoingCallDetector.MY_PREF,MODE_PRIVATE);
         String number = sharedPreferences.getString(OutgoingCallDetector.NUMBER_KEY,"No Value Found");
         t.setText(number);
+        Log.d("APP RESUMED", number);
     }
     @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.button_push_sos){
             pushSOS();
+            initiateCall();
         }
     }
 
-    public void pushSOS() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        String lat;
-        String lng;
-        String alt;
-        mDatabase.child("sos").child(user.getUid()).setValue("test-sos");
-        mDatabase.child("users").child(user.getUid()).setValue("test-update");
+    private void pushSOS() {
+        final FirebaseUser user = mAuth.getCurrentUser();
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            t.setText("PERMISSION NOT GRANTED");
+        } else {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                String lat = "Latitude: " + Double.toString(location.getLatitude()) + "\n";
+                                String lng = "Longitude: " + Double.toString(location.getLongitude()) + "\n";
+                                String alt = "Altitude: " + Double.toString(location.getAltitude()) + "\n";
+                                t.setText(lat+lng+alt);
+                            }
+
+                            mDatabase.child("sos").child(user.getUid()).setValue("test-sos");
+                            mDatabase.child("users").child(user.getUid()).setValue("test-update");
+                        }
+                    });
+        }
+    }
+
+    private void initiateCall(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.d("PERMISSION NOT GRANTED", "phone call");
+        } else {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:16143793483"));
+            startActivity(callIntent);
+        }
+
     }
 }

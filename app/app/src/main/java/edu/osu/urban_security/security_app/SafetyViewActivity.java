@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+    private static final String TAG = "SafetyViewActivity";
 
     private FusedLocationProviderClient mFusedLocationClient;
     private Button SOSPushButton;
@@ -124,10 +126,12 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
     public void pushSOS() {
         User user = g.user;
-        String lat;
-        String lng;
-        String alt;
+        String timestamp = "test-timestamp";
+
         // TODO: push timestamp to firebase
-        mDatabase.child("sos").child(mAuth.getUid()).child("timestamp").setValue("");
+        mDatabase.child("sos").child(mAuth.getUid()).child("timestamp").setValue(timestamp);
+
+        // to manually test if the current user is actually the current user
+        Log.d(TAG, "pushSOS(): User's Name: " + user.name);
     }
 }

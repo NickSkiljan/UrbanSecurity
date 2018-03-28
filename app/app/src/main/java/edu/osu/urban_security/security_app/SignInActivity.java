@@ -67,7 +67,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         super.onStart();
         // Check auth on Activity start
         if (isSignedIn(mAuth.getCurrentUser())) {
-            onAuthSuccess(mAuth.getCurrentUser());
+            onAuthSuccess();
         }
     }
 
@@ -116,7 +116,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                             FirebaseUser user = mAuth.getCurrentUser();
                             Log.d(TAG, "onComplete: " + user.getUid());
                             writeNewUser(user.getUid(), name, phoneNumber);
-                            onAuthSuccess(user);
+                            onAuthSuccess();
                         } else {
                             Log.e(TAG, String.valueOf(task.getException()));
                             Toast.makeText(SignInActivity.this, "Sign Up Failed",
@@ -141,13 +141,17 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 //                });
     }
 
-    private void onAuthSuccess(FirebaseUser user) {
+    private void onAuthSuccess() {
         // Read value for current user and assign it to g.user (the Global to track user)
-        ValueEventListener postListener = new ValueEventListener() {
+        ValueEventListener userListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user= dataSnapshot.getValue(User.class);
-                g.user = user;
+                DataSnapshot childSnapshot = dataSnapshot.child("users");
+                User userObj = childSnapshot.child(mAuth.getUid()).getValue(User.class);
+                // User(name, phoneNumber, latitude, longitude, altitude, address, moving)
+//                g.user = new User(user.name, user.phoneNumber, user.latitude, user.longitude,
+//                        user.altitude, user.address, user.moving);
+                g.user = userObj;
             }
 
             @Override
@@ -155,7 +159,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 Log.w(TAG, "onAuthSuccess:onCancelled: ", databaseError.toException());
             }
         };
-        mDatabase.addListenerForSingleValueEvent(postListener);
+        mDatabase.addListenerForSingleValueEvent(userListener);
 
         // Go to Main Activity
         startActivity(new Intent(SignInActivity.this, SafetyViewActivity.class));

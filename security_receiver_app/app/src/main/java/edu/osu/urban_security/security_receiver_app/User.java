@@ -4,11 +4,6 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.sql.Timestamp;
 
-/**
- * Created by Ravi Tamada on 07/10/16.
- * www.androidhive.info
- */
-
 @IgnoreExtraProperties
 public class User {
 
@@ -19,6 +14,7 @@ public class User {
     public boolean moving;
     public String phone_number;
     public String address;
+    public byte[] privateKey;
 
     public String userId;
 
@@ -28,7 +24,7 @@ public class User {
     public User() {
     }
 
-    public User(String name, String latitude, String longitude, String altitude, boolean moving, String phone_number, String address) {
+    public User(String name, String latitude, String longitude, String altitude, boolean moving, String phone_number, String address, byte[] privateKey) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -36,5 +32,6 @@ public class User {
         this.moving = moving;
         this.phone_number = phone_number;
         this.address = address;
+        this.privateKey = privateKey;
     }
 }

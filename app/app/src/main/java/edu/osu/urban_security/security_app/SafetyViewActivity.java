@@ -2,6 +2,7 @@ package edu.osu.urban_security.security_app;
 
 import android.*;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    private TextView t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +48,11 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        final TextView t;
         t = (TextView)findViewById(R.id.textView);
+
+        //Create intent and start listening service
+        Intent intent = new Intent(this, CallDetectionService.class);
+        startService(intent);
 
         SOSPushButton = findViewById(R.id.button_push_sos);
 
@@ -110,6 +115,16 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    /* Currently triggering send on application resume.
+        TODO: Trigger on acutal call
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = getSharedPreferences(OutgoingCallDetector.MY_PREF,MODE_PRIVATE);
+        String number = sharedPreferences.getString(OutgoingCallDetector.NUMBER_KEY,"No Value Found");
+        t.setText(number);
+    }
     @Override
     public void onClick(View v) {
         int i = v.getId();

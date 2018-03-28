@@ -29,6 +29,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.sql.Timestamp;
+
 import edu.osu.urban_security.security_app.models.Globals;
 import edu.osu.urban_security.security_app.models.User;
 
@@ -184,14 +186,16 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                         @Override
                         public void onSuccess(Location location) {
                             User user = g.user;
-                            String timestamp = "test-timestamp";
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
                                 Log.d(TAG, "onSuccess: Location found...");
-                                String lat = "Latitude: " + Double.toString(location.getLatitude()) + "\n";
-                                String lng = "Longitude: " + Double.toString(location.getLongitude()) + "\n";
-                                String alt = "Altitude: " + Double.toString(location.getAltitude()) + "\n";
-                                t.setText(lat+lng+alt);
+                                String lat = Double.toString(location.getLatitude());
+                                String lng = Double.toString(location.getLongitude());
+                                String alt = Double.toString(location.getAltitude());
+                                String latString = "Latitude: " + lat + "\n";
+                                String lngString = "Longitude: " + lng + "\n";
+                                String altString = "Altitude: " + alt + "\n";
+                                t.setText(latString+lngString+altString);
                                 user.latitude = lat;
                                 user.longitude = lng;
                                 user.altitude = alt;
@@ -200,8 +204,9 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                                 Log.d(TAG, "onSuccess: Location null. Try opening Google Maps and then try pushing the button again.");
                             }
 
-                            // TODO: push timestamp to firebase
-                            mDatabase.child("sos").child(mAuth.getUid()).child("timestamp").setValue(timestamp);
+                            // COMPLETED: push timestamp to firebase
+                            Timestamp ts = new Timestamp(System.currentTimeMillis());
+                            mDatabase.child("sos").child(mAuth.getUid()).child("timestamp").setValue(ts.toString());
 
                             // to manually test if the current user is actually the current user
                             //Log.d(TAG, "pushSOS(): User's Name: " + user.name);

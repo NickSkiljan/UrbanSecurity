@@ -33,4 +33,15 @@ public class User {
         this.moving = false;
     }
 
+    public User(String name, String phoneNumber, String latitude, String longitude, String altitude,
+                String address, boolean moving) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
+        this.address = address;
+        this.moving = moving;
+    }
+
 }

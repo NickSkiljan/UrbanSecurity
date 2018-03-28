@@ -28,17 +28,23 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import edu.osu.urban_security.security_app.models.Globals;
+import edu.osu.urban_security.security_app.models.User;
+
 public class SafetyViewActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
     public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 2;
 
+    private static final String TAG = "SafetyViewActivity";
+
     private FusedLocationProviderClient mFusedLocationClient;
     private Button SOSPushButton;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    Globals g = Globals.getInstance();
     private TextView t;
 
     @Override
@@ -162,9 +168,16 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                                 String alt = "Altitude: " + Double.toString(location.getAltitude()) + "\n";
                                 t.setText(lat+lng+alt);
                             }
+                            User user = g.user;
+                            String timestamp = "test-timestamp";
 
-                            mDatabase.child("sos").child(user.getUid()).setValue("test-sos");
-                            mDatabase.child("users").child(user.getUid()).setValue("test-update");
+                            // TODO: push timestamp to firebase
+                            mDatabase.child("sos").child(mAuth.getUid()).child("timestamp").setValue(timestamp);
+
+                            // to manually test if the current user is actually the current user
+                            Log.d(TAG, "pushSOS(): User's Name: " + user.name);
+                            //mDatabase.child("sos").child(user.getUid()).setValue("test-sos");
+                            //mDatabase.child("users").child(user.getUid()).setValue("test-update");
                         }
                     });
         }
@@ -179,6 +192,4 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
             callIntent.setData(Uri.parse("tel:16143793483"));
             startActivity(callIntent);
         }
-
-    }
 }

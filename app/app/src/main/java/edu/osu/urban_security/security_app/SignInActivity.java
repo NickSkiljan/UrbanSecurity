@@ -3,8 +3,12 @@ package edu.osu.urban_security.security_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,9 +19,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import edu.osu.urban_security.security_app.models.Globals;
 import edu.osu.urban_security.security_app.models.User;
 
 /**
@@ -34,6 +42,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private EditText mNameField;
     private EditText mPhoneField ;
     private Button mSignUpButton;
+    Globals g = Globals.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +65,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onStart() {
         super.onStart();
-
         // Check auth on Activity start
         if (isSignedIn(mAuth.getCurrentUser())) {
-            onAuthSuccess(mAuth.getCurrentUser());
+            onAuthSuccess();
         }
     }
 
@@ -106,9 +114,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInAnonymously: success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d(TAG, "onComplete: " + user.getUid());
                             writeNewUser(user.getUid(), name, phoneNumber);
-                            onAuthSuccess(user);
+                            onAuthSuccess();
                         } else {
+                            Log.e(TAG, String.valueOf(task.getException()));
                             Toast.makeText(SignInActivity.this, "Sign Up Failed",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -131,10 +141,32 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 //                });
     }
 
-    private void onAuthSuccess(FirebaseUser user) {
-        // Go to MainActivity
-        startActivity(new Intent(SignInActivity.this, WriteActivity.class));
-        finish();
+    private void onAuthSuccess() {
+        // Read value for current user and assign it to g.user (the Global to track user)
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DataSnapshot childSnapshot = dataSnapshot.child("users");
+                User userObj = childSnapshot.child(mAuth.getUid()).getValue(User.class);
+//                 User(name, phoneNumber, latitude, longitude, altitude, address, moving)
+//                g.user = new User(user.name, user.phoneNumber, user.latitude, user.longitude,
+//                        user.altitude, user.address, user.moving);
+                g.user = userObj;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onAuthSuccess:onCancelled: ", databaseError.toException());
+            }
+        };
+        mDatabase.addListenerForSingleValueEvent(userListener);
+
+        // Go to Main Activity
+        startActivity(new Intent(SignInActivity.this, SafetyViewActivity.class));
+        overridePendingTransition(R.anim.enter1,R.anim.exit1);
+        // finish();
+        // startActivity(new Intent(SignInActivity.this, LocationActivity.class));
+>>>>>>> cf7e8f85024e6e7bbb9966177d70ac6ca85dd288
     }
 
     private boolean isSignedIn(FirebaseUser user) {
@@ -163,7 +195,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     // [START basic_write]
     private void writeNewUser(String userId, String name, String phoneNumber) {
         User user = new User(name, phoneNumber);
-
         mDatabase.child("users").child(userId).setValue(user);
     }
     // [END basic_write]

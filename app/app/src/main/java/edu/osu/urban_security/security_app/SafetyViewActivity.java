@@ -137,7 +137,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         super.onResume();
         SharedPreferences sharedPreferences = getSharedPreferences(OutgoingCallDetector.MY_PREF,MODE_PRIVATE);
         String number = sharedPreferences.getString(OutgoingCallDetector.NUMBER_KEY,"No Value Found");
-        //t.setText(number);
+        t.setText(number);
         Log.d("APP RESUMED", number);
     }
     @Override

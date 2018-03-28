@@ -64,10 +64,6 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
         t = (TextView) findViewById(R.id.textView);
 
-        //Create intent and start listening service
-        Intent intent = new Intent(this, CallDetectionService.class);
-        startService(intent);
-
         SOSPushButton = findViewById(R.id.button_push_sos);
 
         t.setText("Checking Permissions");
@@ -91,7 +87,12 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                 != PackageManager.PERMISSION_GRANTED) {
             t.setText("Location Services Disabled");
         } else {
+
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+            //Create intent and start listening service
+            Intent intent = new Intent(this, CallDetectionService.class);
+            startService(intent);
 
             mFusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -151,17 +152,6 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    /* Currently triggering send on application resume.
-        TODO: Trigger on acutal call
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        SharedPreferences sharedPreferences = getSharedPreferences(OutgoingCallDetector.MY_PREF,MODE_PRIVATE);
-        String number = sharedPreferences.getString(OutgoingCallDetector.NUMBER_KEY,"No Value Found");
-        t.setText(number);
-        Log.d("APP RESUMED", number);
-    }
     @Override
     public void onClick(View v) {
         int i = v.getId();

@@ -54,9 +54,10 @@ public class Globals {
     public void pushSOS(){
         Log.d(TAG, "pushing SOS");
 
-        // COMPLETED: push timestamp to firebase
+        // COMPLETED: push timestamp and user info to firebase
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         mDatabase.child("sos").child(mAuth.getUid()).child("timestamp").setValue(ts.toString());
+        mDatabase.child("users").child(mAuth.getUid()).setValue(user);
     }
 
     /**

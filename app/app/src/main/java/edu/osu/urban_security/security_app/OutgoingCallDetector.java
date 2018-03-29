@@ -1,5 +1,6 @@
 package edu.osu.urban_security.security_app;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

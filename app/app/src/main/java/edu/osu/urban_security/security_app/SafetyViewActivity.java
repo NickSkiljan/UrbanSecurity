@@ -48,7 +48,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-    Globals g = Globals.getInstance();
+    Globals g;
     private TextView t;
 
     @Override
@@ -62,11 +62,11 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
+        g = Globals.getInstance();
+
         t = (TextView) findViewById(R.id.textView);
 
         SOSPushButton = findViewById(R.id.button_push_sos);
-
-        t.setText("Checking Permissions");
 
         ActivityCompat.requestPermissions(this,
                 new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -83,31 +83,13 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
         SOSPushButton.setOnClickListener(this);
 
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            t.setText("Location Services Disabled");
-        } else {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //Create intent and start listening service
+        Intent intent = new Intent(this, CallDetectionService.class);
+        startService(intent);
 
-            //Create intent and start listening service
-            Intent intent = new Intent(this, CallDetectionService.class);
-            startService(intent);
-
-            mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                String lat = "Latitude: " + Double.toString(location.getLatitude()) + "\n";
-                                String lng = "Longitude: " + Double.toString(location.getLongitude()) + "\n";
-                                String alt = "Altitude: " + Double.toString(location.getAltitude()) + "\n";
-                                t.setText(lat+lng+alt);
-                            }
-                        }
-                    });
-        }
+        updateUserLocation();
 
     }
 
@@ -156,60 +138,8 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.button_push_sos){
-            pushSOS();
+            updateUserLocation();
             initiateCall();
-        }
-    }
-
-    private void pushSOS() {
-//        final FirebaseUser user = mAuth.getCurrentUser();
-
-        boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-
-        if(permissionGranted) {
-            // {Some Code}
-            t.setText("");
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-            mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            User user = g.user;
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                Log.d(TAG, "onSuccess: Location found...");
-                                String lat = Double.toString(location.getLatitude());
-                                String lng = Double.toString(location.getLongitude());
-                                String alt = Double.toString(location.getAltitude());
-                                String latString = "Latitude: " + lat + "\n";
-                                String lngString = "Longitude: " + lng + "\n";
-                                String altString = "Altitude: " + alt + "\n";
-                                t.setText(latString+lngString+altString);
-                                user.latitude = lat;
-                                user.longitude = lng;
-                                user.altitude = alt;
-                                mDatabase.child("users").child(mAuth.getUid()).setValue(user);
-                            } else {
-                                Log.d(TAG, "onSuccess: Location null. Try opening Google Maps and then try pushing the button again.");
-                            }
-
-                            // COMPLETED: push timestamp to firebase
-                            Timestamp ts = new Timestamp(System.currentTimeMillis());
-                            mDatabase.child("sos").child(mAuth.getUid()).child("timestamp").setValue(ts.toString());
-
-                            // to manually test if the current user is actually the current user
-                            //Log.d(TAG, "pushSOS(): User's Name: " + user.name);
-                            //mDatabase.child("sos").child(user.getUid()).setValue("test-sos");
-                            //mDatabase.child("users").child(user.getUid()).setValue("test-update");
-                            Log.d(TAG, "onSuccess: Updated user's location and pushed SOS");
-                        }
-                    });
-
-        } else {
-            t.setText("Location Services Disabled");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-            pushSOS();
         }
     }
 
@@ -221,6 +151,42 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
             Intent callIntent = new Intent(Intent.ACTION_CALL);
             callIntent.setData(Uri.parse("tel:16143793483"));
             startActivity(callIntent);
+        }
+    }
+
+    private void updateUserLocation(){
+        boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+        if(permissionGranted) {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            User user = g.user;
+                            if (location != null && user != null) {
+                                Log.d(TAG, "onSuccess: Location found...");
+                                String lat = Double.toString(location.getLatitude());
+                                String lng = Double.toString(location.getLongitude());
+                                String alt = Double.toString(location.getAltitude());
+                                String latString = "Latitude: " + lat + "\n";
+                                String lngString = "Longitude: " + lng + "\n";
+                                String altString = "Altitude: " + alt + "\n";
+                                user.latitude = lat;
+                                user.longitude = lng;
+                                user.altitude = alt;
+                                mDatabase.child("users").child(mAuth.getUid()).setValue(user);
+                            } else {
+                                Log.d(TAG, "onSuccess: Location or user null. Try opening Google Maps and then try pushing the button again.");
+                            }
+                        }
+                    });
+
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+            updateUserLocation();
         }
     }
 }

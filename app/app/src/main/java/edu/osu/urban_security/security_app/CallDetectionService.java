@@ -21,7 +21,6 @@ public class CallDetectionService extends Service{
     public void onDestroy() {
         super.onDestroy();
         outgoingCallDetector.stop();
-
     }
 
     @Nullable

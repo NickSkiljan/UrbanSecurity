@@ -122,23 +122,26 @@ public class MainActivity extends AppCompatActivity {
 
 
         UsersAdapter adapter = new UsersAdapter(this, SOSs);
-        ListView listView = findViewById(R.id.lvUsers);
+        final ListView listView = findViewById(R.id.lvUsers);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String logString = "Clicked SOS for " + view.tv
-                Log.d(TAG, "Item Clicked");
+                //Extract user data
+                User user = (User) listView.getItemAtPosition(i);
+                String name = user.name;
+                String latitude = user.latitude;
+                String longitude = user.longitude;
 
-                // Create a Uri from an intent string. Use the result to create an Intent.
-                Uri gmmIntentUri = Uri.parse("geo:40,-80");
+                //Log click
+                Log.d(TAG, "Clicked on SOS");
+                String logString = "Selected SOS for " + name;
+                Log.d(TAG, logString);
 
-                // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+                //Open google maps
+                String uriString = "geo:" + latitude + "," + longitude;
+                Uri gmmIntentUri = Uri.parse(uriString);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-
-                // Make the Intent explicit by setting the Google Maps package
                 mapIntent.setPackage("com.google.android.apps.maps");
-
-                // Attempt to start an activity that can handle the Intent
                 startActivity(mapIntent);
 
             }

@@ -1,7 +1,12 @@
 package edu.osu.urban_security.security_receiver_app;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -117,7 +122,30 @@ public class MainActivity extends AppCompatActivity {
 
 
         UsersAdapter adapter = new UsersAdapter(this, SOSs);
-        ListView listView = findViewById(R.id.lvUsers);
+        final ListView listView = findViewById(R.id.lvUsers);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Extract user data
+                User user = (User) listView.getItemAtPosition(i);
+                String name = user.name;
+                String latitude = user.latitude;
+                String longitude = user.longitude;
+
+                //Log click
+                Log.d(TAG, "Clicked on SOS");
+                String logString = "Selected SOS for " + name;
+                Log.d(TAG, logString);
+
+                //Open google maps
+                String uriString = "google.navigation:q=" + latitude + "," + longitude;
+                Uri gmmIntentUri = Uri.parse(uriString);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+
+            }
+        });
         listView.setAdapter(adapter);
     }
 

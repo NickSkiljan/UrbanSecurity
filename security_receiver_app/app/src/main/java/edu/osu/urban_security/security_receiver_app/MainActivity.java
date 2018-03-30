@@ -1,7 +1,12 @@
 package edu.osu.urban_security.security_receiver_app;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -118,6 +123,26 @@ public class MainActivity extends AppCompatActivity {
 
         UsersAdapter adapter = new UsersAdapter(this, SOSs);
         ListView listView = findViewById(R.id.lvUsers);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String logString = "Clicked SOS for " + view.tv
+                Log.d(TAG, "Item Clicked");
+
+                // Create a Uri from an intent string. Use the result to create an Intent.
+                Uri gmmIntentUri = Uri.parse("geo:40,-80");
+
+                // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+
+                // Make the Intent explicit by setting the Google Maps package
+                mapIntent.setPackage("com.google.android.apps.maps");
+
+                // Attempt to start an activity that can handle the Intent
+                startActivity(mapIntent);
+
+            }
+        });
         listView.setAdapter(adapter);
     }
 

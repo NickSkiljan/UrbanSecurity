@@ -14,6 +14,7 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 
@@ -22,7 +23,10 @@ public class AES {
 
     public SecretKey generateKey() throws NoSuchAlgorithmException {
         KeyGenerator generator = KeyGenerator.getInstance("AES");
+        Provider provide = generator.getProvider();
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        // rand not random at all
+        // TODO::generate seed based on floor of X minutes from internal clock
         sr.setSeed((long) 12.2);
         generator.init(128, sr); // 192 and 256 bits may not be available
         SecretKey skey = generator.generateKey();

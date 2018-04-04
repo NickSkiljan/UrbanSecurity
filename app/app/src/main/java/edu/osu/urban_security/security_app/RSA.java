@@ -10,6 +10,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -22,18 +23,10 @@ public class RSA {
     private Cipher cipher1; private Cipher cipher2;
     private KeyPairGenerator generator;
     private KeyPair keyPair;
-    private PrivateKey priKey;
-    private PublicKey pubKey;
-
-    byte[] encrypted;
-    byte [] decrypted;
 
 
-    public RSA(String text) throws Exception {
-        // check text to make sure its valid
-        if(text == null || text.length() == 0) {
-            throw new Exception("Empty String");
-        }
+
+    public RSA() throws Exception {
         // generateKeys
         generateKeys();
     }
@@ -43,41 +36,29 @@ public class RSA {
         generator.initialize(2048);
         // generate key pair
         keyPair = generator.generateKeyPair();
-        this.setPriKey(keyPair.getPrivate());
-        this.setPubKey(keyPair.getPublic());
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public String encrypt(String text) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
-        // grab cipher
-        cipher1 = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
-        cipher1.init(Cipher.ENCRYPT_MODE,getPublicKey());
-        //
-        encrypted = cipher1.doFinal(text.getBytes());
-        return  encrypted.toString();
+    public byte[] encrypt(byte[] text) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+        // grab cipher  f
+        //cipher1 = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+        cipher1 = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+
+        //cipher1.init(Cipher.ENCRYPT_MODE,keyPair.getPublic());
+        cipher1.init(Cipher.PUBLIC_KEY, keyPair.getPublic());
+
+        byte[] encrypted = cipher1.doFinal(text);
+        return  encrypted;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public String decrpt(String text) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        cipher2 = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
-        cipher2.init(Cipher.DECRYPT_MODE,getPrivateKey());
-        decrypted = cipher2.doFinal(text.getBytes());
-        return decrypted.toString();
+    public byte [] decrypt(byte[] text) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+        //cipher2 = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+        cipher2 = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        cipher2.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
+
+        byte [] decrypted = cipher2.doFinal(text);
+        return decrypted;
     }
 
-    public PublicKey getPublicKey(){
-        return pubKey;
-    }
-
-    public PrivateKey getPrivateKey(){
-        return priKey;
-    }
-
-    public void setPriKey(PrivateKey key){
-        priKey = key;
-    }
-
-    public void setPubKey(PublicKey key){
-        pubKey = key;
-    }
 }

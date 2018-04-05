@@ -25,6 +25,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.SecretKey;
+
 import edu.osu.urban_security.security_app.models.Globals;
 import edu.osu.urban_security.security_app.models.User;
 
@@ -116,6 +120,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                             FirebaseUser user = mAuth.getCurrentUser();
                             Log.d(TAG, "onComplete: " + user.getUid());
                             writeNewUser(user.getUid(), name, phoneNumber);
+                            Log.d(TAG, "onComplete: name: " + name);
+                            Log.d(TAG, "onComplete: phone#: " + phoneNumber);
                             onAuthSuccess();
                         } else {
                             Log.e(TAG, String.valueOf(task.getException()));
@@ -193,8 +199,22 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     // [START basic_write]
     private void writeNewUser(String userId, String name, String phoneNumber) {
-        User user = new User(name, phoneNumber);
-        mDatabase.child("users").child(userId).setValue(user);
+        AES aes = new AES();
+        try {
+            // AES key
+            SecretKey key = aes.generateKey();
+            byte [] encodedKey = key.getEncoded();
+            // RSA key to encrypt AES key
+//            RSA encryption = new RSA();
+            // Encrypted AES key using RSA key
+//            byte[] encryptedKey = encryption.encrypt(encodedKey);
+            // Push user to Firebase
+            User user = new User(name, phoneNumber, encodedKey, aes, key);
+            mDatabase.child("users").child(userId).setValue(user);
+            Log.d(TAG, "writeNewUser: Wrote user to Firebase");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     // [END basic_write]
 

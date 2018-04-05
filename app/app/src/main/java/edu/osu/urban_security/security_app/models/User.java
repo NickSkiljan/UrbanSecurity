@@ -2,6 +2,10 @@ package edu.osu.urban_security.security_app.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import javax.crypto.SecretKey;
+
+import edu.osu.urban_security.security_app.AES;
+
 /**
  * Created by sunnypatel on 3/7/18.
  */
@@ -19,18 +23,27 @@ public class User {
     public boolean moving;
     public String address;
 
+    public String key;
+
+
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String name, String phoneNumber) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.latitude = "n/a";
-        this.longitude = "n/a";
-        this.altitude = "n/a";
-        this.address = "n/a";
-        this.moving = false;
+    public User(String name, String phoneNumber, String encryptedAESKey, AES aes, SecretKey AESKey) {
+        try {
+            this.name = new String(aes.encrypt(AESKey, name.getBytes()));
+            this.phoneNumber = new String(aes.encrypt(AESKey, phoneNumber.getBytes()));
+            this.latitude = "n/a";
+            this.longitude = "n/a";
+            this.altitude = "n/a";
+            this.address = "n/a";
+            this.moving = false;
+            this.key = encryptedAESKey;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public User(String name, String phoneNumber, String latitude, String longitude, String altitude,

@@ -29,6 +29,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+
+
 import java.sql.Timestamp;
 
 import javax.crypto.SecretKey;
@@ -135,8 +137,10 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                         finishOnCreate();
                     }
                     // PERMISSION GRANTED
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && mFusedLocationClient != null) {
                         mLastLocation = mFusedLocationClient.getLastLocation();
+                    } else {
+                        finishOnCreate();
                     }
                 } else {
                     Log.d(TAG, "onRequestPermissionsResult: PERMISSION DENIED");
@@ -207,33 +211,33 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                                 String lngString = "Longitude: " + lng + "\n";
                                 String altString = "Altitude: " + alt + "\n";
 
-                                // RSA key to decrypt user's AES key
+                                // RSA key to decrypt user's AES_key
                                 try {
-                                    RSA encryption = new RSA();
-
-                                    byte[] AESKey = encryption.decrypt(user.key.getBytes("ISO_8859_1"));
+                                    // Decode user's Base64-encoded AES_key
+//                                    RSA encryption = new RSA();
+//                                    byte[] AESKey = encryption.decrypt(user.key));
                                     // Convert key back to SecretKey
+                                    byte[] AESKey = user.key.getBytes();
                                     SecretKey key = new SecretKeySpec(AESKey, 0, AESKey.length, "AES");
+                                    // Encrypt GeoLocation
                                     byte[] encryptedLat = AES.encrypt(key, lat.getBytes());
                                     byte[] encryptedLng = AES.encrypt(key, lng.getBytes());
                                     byte[] encryptedAlt = AES.encrypt(key, alt.getBytes());
                                     user.latitude = new String(encryptedLat);
                                     user.longitude = new String(encryptedLng);
                                     user.altitude = new String(encryptedAlt);
+                                    /* [TEST] Manually test decryption locally */
                                     Log.d(TAG, "onSuccess: Pushing encrypted location to Firebase...");
                                     Log.d(TAG, "onSuccess: Latitude = " + new String(AES.decrypt(key, encryptedLat)) );
                                     Log.d(TAG, "onSuccess: Longitude = " + new String(AES.decrypt(key, encryptedLng)) );
                                     Log.d(TAG, "onSuccess: Altitude = " + new String(AES.decrypt(key, encryptedAlt)) );
+                                    /* [END TEST] */
+                                    // Push user information to Firebase
                                     mDatabase.child("users").child(mAuth.getUid()).setValue(user);
                                 } catch (Exception e) {
                                     Log.e(TAG, "onSuccess: Failure encrypting location...");
                                     e.printStackTrace();
                                 }
-
-//                                user.latitude = lat;
-//                                user.longitude = lng;
-//                                user.altitude = alt;
-//                                mDatabase.child("users").child(mAuth.getUid()).setValue(user);
                             } else {
                                 Log.d(TAG, "onSuccess: Location or user null. Try opening Google Maps and then try pushing the button again.");
                             }

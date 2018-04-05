@@ -1,8 +1,8 @@
 package edu.osu.urban_security.security_app.models;
 
-import android.util.Base64;
 
 import com.google.firebase.database.IgnoreExtraProperties;
+
 
 import java.nio.charset.StandardCharsets;
 
@@ -36,6 +36,7 @@ public class User {
 
     public User(String name, String phoneNumber, byte[] encryptedAESKey, AES aes, SecretKey AESKey) {
         try {
+
             this.name = new String(aes.encrypt(AESKey, name.getBytes()));
             this.phoneNumber = new String(aes.encrypt(AESKey, phoneNumber.getBytes()));
             this.latitude = "n/a";
@@ -43,7 +44,9 @@ public class User {
             this.altitude = "n/a";
             this.address = "n/a";
             this.moving = false;
-            this.key = new String(encryptedAESKey, "ISO_8859_1");
+
+//            this.key = new String(Base64.encode(encryptedAESKey, Base64.NO_WRAP));
+            this.key = new String(encryptedAESKey);
         } catch (Exception e) {
             e.printStackTrace();
         }

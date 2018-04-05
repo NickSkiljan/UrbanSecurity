@@ -205,11 +205,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             SecretKey key = aes.generateKey();
             byte [] encodedKey = key.getEncoded();
             // RSA key to encrypt AES key
-            RSA encryption = new RSA();
+//            RSA encryption = new RSA();
             // Encrypted AES key using RSA key
-            byte[] encryptedKey = encryption.encrypt(encodedKey);
+//            byte[] encryptedKey = encryption.encrypt(encodedKey);
             // Push user to Firebase
-            User user = new User(name, phoneNumber, encryptedKey, aes, key);
+            User user = new User(name, phoneNumber, encodedKey, aes, key);
             mDatabase.child("users").child(userId).setValue(user);
             Log.d(TAG, "writeNewUser: Wrote user to Firebase");
         } catch (Exception e) {

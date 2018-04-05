@@ -40,8 +40,10 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
     public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 2;
     public static final int PERMISSIONS_CODE = 42;
+    public static final String[] permissions = {Manifest.permission.CALL_PHONE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
     private static final String TAG = "SafetyViewActivity";
+    private static boolean finishedOnCreate = false;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private Task<Location> mLastLocation;
@@ -80,10 +82,10 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 //        ActivityCompat.requestPermissions(this,
 //                new String[]{android.Manifest.permission.CALL_PHONE},
 //                MY_PERMISSIONS_REQUEST_CALL_PHONE);
-        String[] permissions = {Manifest.permission.CALL_PHONE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-
-        ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_CODE);
-
+//        String[] permissions = {Manifest.permission.CALL_PHONE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+//
+//        ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_CODE);
+        requestPermissions();
 //        SOSPushButton.setOnClickListener(this);
 //
 //        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -96,6 +98,10 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
     }
 
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_CODE);
+    }
+
     private void finishOnCreate() {
         SOSPushButton.setOnClickListener(this);
 
@@ -106,6 +112,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         startService(intent);
 
         updateUserLocation();
+        finishedOnCreate = true;
     }
 
     @Override
@@ -121,7 +128,9 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
             case PERMISSIONS_CODE: {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "onRequestPermissionsResult: PERMISSION GRANTED");
-                    finishOnCreate();
+                    if (!finishedOnCreate) {
+                        finishOnCreate();
+                    }
                     // PERMISSION GRANTED
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         mLastLocation = mFusedLocationClient.getLastLocation();
@@ -206,7 +215,8 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
         } else {
             Log.d(TAG, "updateUserLocation: Location Permission was denied...");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_CODE);
+            requestPermissions();
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_CODE);
             updateUserLocation();
         }
     }

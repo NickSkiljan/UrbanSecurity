@@ -1,7 +1,6 @@
 package edu.osu.urban_security.security_app;
 
 
-import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -69,7 +68,7 @@ public class ExampleUnitTest {
         String decrypt_key = new String(decryptedMessage);
         assertEquals(key_string, decrypt_key);
     }
-
+    /*
     @Test
     public void RSA_encryption_of_AES() throws Exception {
         AES aes = new AES();
@@ -85,18 +84,19 @@ public class ExampleUnitTest {
 
 //        String keyString = Base64.encodeToString(encryptedKey, Base64.NO_WRAP);
 //        System.err.println(keyString == null);
-        String keyString = Base64.encodeBase64String(encryptedKey);
+//        String keyString = Base64.encodeBase64String(encryptedKey);
 
 
 //        String keyString = new String(encryptedKey, "ISO_8859_1");
         // Decrypt AES key_string using RSA key
-        byte[] keyStringGetBytes = Base64.decodeBase64(keyString);
+//        byte[] keyStringGetBytes = Base64.decodeBase64(keyString);
 //        byte[] keyStringGetBytes = Base64.decode(keyString, Base64.NO_WRAP);
 //        byte[] keyStringGetBytes = decoder.decode(keyString);
         byte[] decryptedKey = encryption.decrypt(keyStringGetBytes);
 
         assertEquals(new String(encodedKey), new String(decryptedKey));
     }
+    */
 
     @Test
     public void RSA_encryption_of_AES_then_encrypt() throws Exception {

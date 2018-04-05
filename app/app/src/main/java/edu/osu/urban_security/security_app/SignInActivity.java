@@ -208,9 +208,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             RSA encryption = new RSA();
             // Encrypted AES key using RSA key
             byte[] encryptedKey = encryption.encrypt(encodedKey);
-            String key_string = new String(encryptedKey);
             // Push user to Firebase
-            User user = new User(name, phoneNumber, key_string, aes, key);
+            User user = new User(name, phoneNumber, encryptedKey, aes, key);
             mDatabase.child("users").child(userId).setValue(user);
             Log.d(TAG, "writeNewUser: Wrote user to Firebase");
         } catch (Exception e) {

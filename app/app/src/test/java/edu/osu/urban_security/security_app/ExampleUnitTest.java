@@ -1,8 +1,13 @@
 package edu.osu.urban_security.security_app;
 
+import android.util.Base64;
+
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import static org.junit.Assert.*;
 
@@ -45,8 +50,8 @@ public class ExampleUnitTest {
         String message = "hello world";
         AES obj = new AES();
         SecretKey key = obj.generateKey();
-        byte[] encryptedData = obj.encrypt(key,message.getBytes());
-        byte[] decryptedData = obj.decrypt(key,encryptedData);
+        byte[] encryptedData = AES.encrypt(key,message.getBytes());
+        byte[] decryptedData = AES.decrypt(key,encryptedData);
         String decryptedMessage = new String(decryptedData);
         assertEquals(message, decryptedMessage);
     }
@@ -63,6 +68,46 @@ public class ExampleUnitTest {
         String key_string = new String(e);
         String decrypt_key = new String(decryptedMessage);
         assertEquals(key_string, decrypt_key);
+    }
+
+    @Test
+    public void RSA_encryption_of_AES() throws Exception {
+        AES aes = new AES();
+        // AES key
+        SecretKey key = aes.generateKey();
+        byte [] encodedKey = key.getEncoded();
+        // RSA key to encrypt AES key
+        RSA encryption = new RSA();
+        // Encrypted AES key using RSA key
+        byte[] encryptedKey = encryption.encrypt(encodedKey);
+
+        String keyString = new String(encryptedKey, "ISO_8859_1");
+        // Decrypt AES key_string using RSA key
+        byte[] decryptedKey = encryption.decrypt(keyString.getBytes("ISO_8859_1"));
+
+        assertEquals(new String(encodedKey), new String(decryptedKey));
+    }
+
+    @Test
+    public void RSA_encryption_of_AES_then_encrypt() throws Exception {
+        AES aes = new AES();
+        // AES key
+        SecretKey key = aes.generateKey();
+        byte [] encodedKey = key.getEncoded();
+        // RSA key to encrypt AES key
+        RSA encryption = new RSA();
+        // Encrypted AES key using RSA key
+        byte[] encryptedKey = encryption.encrypt(encodedKey);
+
+        String keyString = new String(encryptedKey, "ISO_8859_1");
+        // Decrypt AES key_string using RSA key
+        byte[] decryptedKey = encryption.decrypt(keyString.getBytes("ISO_8859_1"));
+
+
+        SecretKey sK = new SecretKeySpec(decryptedKey, 0, decryptedKey.length, "AES");
+        byte[] expected = AES.encrypt(key, "test".getBytes());
+        byte[] result = AES.encrypt(sK, "test".getBytes());
+        assertEquals(new String(expected), new String(result));
     }
 
 //    @Test

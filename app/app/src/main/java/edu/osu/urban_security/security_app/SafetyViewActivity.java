@@ -31,6 +31,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.Timestamp;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 import edu.osu.urban_security.security_app.models.Globals;
 import edu.osu.urban_security.security_app.models.User;
 
@@ -203,10 +206,34 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                                 String latString = "Latitude: " + lat + "\n";
                                 String lngString = "Longitude: " + lng + "\n";
                                 String altString = "Altitude: " + alt + "\n";
-                                user.latitude = lat;
-                                user.longitude = lng;
-                                user.altitude = alt;
-                                mDatabase.child("users").child(mAuth.getUid()).setValue(user);
+
+                                // RSA key to decrypt user's AES key
+                                try {
+                                    RSA encryption = new RSA();
+
+                                    byte[] AESKey = encryption.decrypt(user.key.getBytes("ISO_8859_1"));
+                                    // Convert key back to SecretKey
+                                    SecretKey key = new SecretKeySpec(AESKey, 0, AESKey.length, "AES");
+                                    byte[] encryptedLat = AES.encrypt(key, lat.getBytes());
+                                    byte[] encryptedLng = AES.encrypt(key, lng.getBytes());
+                                    byte[] encryptedAlt = AES.encrypt(key, alt.getBytes());
+                                    user.latitude = new String(encryptedLat);
+                                    user.longitude = new String(encryptedLng);
+                                    user.altitude = new String(encryptedAlt);
+                                    Log.d(TAG, "onSuccess: Pushing encrypted location to Firebase...");
+                                    Log.d(TAG, "onSuccess: Latitude = " + new String(AES.decrypt(key, encryptedLat)) );
+                                    Log.d(TAG, "onSuccess: Longitude = " + new String(AES.decrypt(key, encryptedLng)) );
+                                    Log.d(TAG, "onSuccess: Altitude = " + new String(AES.decrypt(key, encryptedAlt)) );
+                                    mDatabase.child("users").child(mAuth.getUid()).setValue(user);
+                                } catch (Exception e) {
+                                    Log.e(TAG, "onSuccess: Failure encrypting location...");
+                                    e.printStackTrace();
+                                }
+
+//                                user.latitude = lat;
+//                                user.longitude = lng;
+//                                user.altitude = alt;
+//                                mDatabase.child("users").child(mAuth.getUid()).setValue(user);
                             } else {
                                 Log.d(TAG, "onSuccess: Location or user null. Try opening Google Maps and then try pushing the button again.");
                             }

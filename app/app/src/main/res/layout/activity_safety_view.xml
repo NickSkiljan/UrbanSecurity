@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#309050"
+    android:background="#3aaf61"
     tools:context="edu.osu.urban_security.security_app.LocationActivity">
 
     <android.support.v7.widget.Toolbar
@@ -69,6 +69,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/border_call_button"
         android:text="Call 911"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -85,6 +85,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         g = Globals.getInstance();
 
         t = (TextView) findViewById(R.id.textView);
+        t.setText(username+", you are safe!");
 
         SOSPushButton = findViewById(R.id.button_push_sos);
 

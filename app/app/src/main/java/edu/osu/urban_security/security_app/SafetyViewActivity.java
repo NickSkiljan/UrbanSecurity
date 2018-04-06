@@ -153,11 +153,15 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.options:
+            case R.id.about:
                 Intent intent_1 = new Intent(this,OptionsActivity.class);
 
                 startActivity(intent_1);
                 overridePendingTransition(R.anim.enter1,R.anim.exit1);
+                return true;
+
+            case R.id.sign_out:
+                signOut();
                 return true;
 
             default:
@@ -250,5 +254,12 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 //            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_CODE);
             updateUserLocation();
         }
+    }
+
+    private void signOut() {
+        mAuth.signOut();
+        Intent intent_1 = new Intent(this, SignInActivity.class);
+        startActivity(intent_1);
+        overridePendingTransition(R.anim.enter2, R.anim.exit2);
     }
 }

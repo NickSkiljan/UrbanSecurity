@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
  * Created by dsmil on 3/9/2018.
  */
 
-public class OptionsActivity extends AppCompatActivity implements View.OnClickListener{
+public class OptionsActivity extends AppCompatActivity {
 
     private Button mSignOutButton;
     private FirebaseAuth mAuth;
@@ -34,8 +34,6 @@ public class OptionsActivity extends AppCompatActivity implements View.OnClickLi
 
         mSignOutButton = findViewById(R.id.button_sign_out);
 
-        // Click listeners
-        mSignOutButton.setOnClickListener(this);
     }
 
     @Override
@@ -62,21 +60,6 @@ public class OptionsActivity extends AppCompatActivity implements View.OnClickLi
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
-        }
-    }
-
-    private void signOut(){
-        mAuth.signOut();
-        Intent intent_1 = new Intent(this,SignInActivity.class);
-        startActivity(intent_1);
-        overridePendingTransition(R.anim.enter2,R.anim.exit2);
-    }
-
-    @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.button_sign_out) {
-            signOut();
         }
     }
 }

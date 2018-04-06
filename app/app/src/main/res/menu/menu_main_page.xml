@@ -2,8 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/options"
-        android:title="@string/options"
+    <item android:id="@+id/about"
+        android:title="@string/about"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/sign_out"
+        android:title="@string/sign_out"
         app:showAsAction="never"/>
 
 </menu>

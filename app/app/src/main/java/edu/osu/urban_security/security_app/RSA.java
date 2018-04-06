@@ -10,9 +10,6 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -55,19 +52,10 @@ public class RSA {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public byte [] decrypt(byte[] text) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException {
+    public byte [] decrypt(byte[] text) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
         //cipher2 = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
         cipher2 = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher2.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
-//        InputStream in = new ByteArrayInputStream(text);
-//        byte[] inputBuffer = new byte[ text.length ];
-//
-//        int r = in.read(inputBuffer);
-//        while ( r >= 0 ) {
-//            byte[] outputUpdate = cipher2.update( inputBuffer, 0, r );
-//            r = in.read(inputBuffer);
-//        }
-//        byte[] outputFinalUpdate = cipher2.doFinal();
 
         byte [] decrypted = cipher2.doFinal(text);
         return decrypted;

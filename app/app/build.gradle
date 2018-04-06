@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
+
 android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "edu.osu.urban_security.security_app"
-        minSdkVersion 19
+        minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -14,9 +15,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    testOptions {
-        unitTests.returnDefaultValues = true
     }
 }
 
@@ -30,7 +28,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-//    compile 'commons-codec:commons-codec:1.7'
+
 }
 
 

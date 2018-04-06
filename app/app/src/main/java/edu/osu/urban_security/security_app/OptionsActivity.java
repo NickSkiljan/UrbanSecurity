@@ -32,8 +32,6 @@ public class OptionsActivity extends AppCompatActivity {
         myToolbar.setTitle("");
         setSupportActionBar(myToolbar);
 
-        mSignOutButton = findViewById(R.id.button_sign_out);
-
     }
 
     @Override

@@ -1,6 +1,8 @@
 package edu.osu.urban_security.security_app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
@@ -48,6 +50,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private Button mSignUpButton;
     Globals g = Globals.getInstance();
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +69,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
         // Click listeners
         mSignUpButton.setOnClickListener(this);
+
     }
 
     @Override
@@ -110,6 +116,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
         final String name = mNameField.getText().toString();
         final String phoneNumber = mPhoneField.getText().toString();
+
 
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -166,6 +173,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             }
         };
         mDatabase.addListenerForSingleValueEvent(userListener);
+
+        sharedPref= getSharedPreferences("myPref", Context.MODE_PRIVATE);
+        editor=sharedPref.edit();
+
+        String username = mNameField.getText().toString();
+        editor.putString("username",username);
+        editor.commit();
 
         // Go to Main Activity
         startActivity(new Intent(SignInActivity.this, SafetyViewActivity.class));

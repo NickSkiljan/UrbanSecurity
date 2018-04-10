@@ -72,9 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void update() {
 
-        mSOS.orderByValue().addListenerForSingleValueEvent(new ValueEventListener() {
+        mSOS.orderByChild("timestamp").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     DatabaseReference userId = mUsers.child(snapshot.getKey());

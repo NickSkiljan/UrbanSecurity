@@ -2,9 +2,12 @@ package edu.osu.urban_security.security_app;
 
 import android.*;
 import android.Manifest;
+import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -59,13 +63,21 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
     Globals g;
     private TextView t;
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+        sharedPref= getSharedPreferences("myPref", Context.MODE_PRIVATE);
+        String username=sharedPref.getString("username","");
+
         setContentView(R.layout.activity_safety_view);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle("");
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle(username);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -73,6 +85,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         g = Globals.getInstance();
 
         t = (TextView) findViewById(R.id.textView);
+        t.setText(username+", you are safe!");
 
         SOSPushButton = findViewById(R.id.button_push_sos);
 
@@ -153,11 +166,15 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.options:
+            case R.id.about:
                 Intent intent_1 = new Intent(this,OptionsActivity.class);
 
                 startActivity(intent_1);
                 overridePendingTransition(R.anim.enter1,R.anim.exit1);
+                return true;
+
+            case R.id.sign_out:
+                signOut();
                 return true;
 
             default:
@@ -250,5 +267,12 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 //            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_CODE);
             updateUserLocation();
         }
+    }
+
+    private void signOut() {
+        mAuth.signOut();
+        Intent intent_1 = new Intent(this, SignInActivity.class);
+        startActivity(intent_1);
+        overridePendingTransition(R.anim.enter2, R.anim.exit2);
     }
 }

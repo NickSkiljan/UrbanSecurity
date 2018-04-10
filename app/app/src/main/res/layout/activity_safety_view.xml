@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#309050"
+    android:background="#3aaf61"
     tools:context="edu.osu.urban_security.security_app.LocationActivity">
 
     <android.support.v7.widget.Toolbar
@@ -13,8 +13,8 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        android:theme="@style/ToolBarStyle"
+        app:popupTheme="@style/PopUpToolBarStyle"/>
 
 
     <ImageView
@@ -48,9 +48,13 @@
         android:layout_height="86dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:text="Location:"
+        android:layout_marginTop="16dp"
+        android:text="You are Safe!"
+        android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textSize="36sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView6" />
@@ -63,8 +67,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@android:color/holo_red_light"
+        android:background="@drawable/border_call_button"
         android:text="Call 911"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

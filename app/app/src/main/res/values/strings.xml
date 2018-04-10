@@ -16,6 +16,8 @@
     <string name="send_address">Send Address</string>
     <string name="sign_up">Sign Up</string>
     <string name="sign_out">Delete Account</string>
-    <string name="options">Options</string>
+    <string name="about">About</string>
     <string name="main_page">Main Page</string>
+    <string name="about_title">About the App:</string>
+    <string name="about_body">Congratulations on downloading UrbanSecurity!\n\nUrbanSecurity is an app designed to keep the community safe. Currently when citizens call 911 or any other emergency number using a mobile device, emergency services is unable to accurately track a caller\'s location. However, with UrbanSecurity downloaded on your phone, this is no longer an issue. Whenever a 911 call is made, this app will automatically detect the call and send your location to a secure database, allowing emergency services access to your immediate location.</string>
 </resources>

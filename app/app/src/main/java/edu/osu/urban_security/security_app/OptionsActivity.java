@@ -1,6 +1,8 @@
 package edu.osu.urban_security.security_app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,16 +23,22 @@ public class OptionsActivity extends AppCompatActivity {
     private Button mSignOutButton;
     private FirebaseAuth mAuth;
 
+    SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
 
+        sharedPref= getSharedPreferences("myPref", Context.MODE_PRIVATE);
+        String username=sharedPref.getString("username","");
+
         setContentView(R.layout.activity_options);
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle("");
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle(username);
 
     }
 

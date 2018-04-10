@@ -75,6 +75,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         String username=sharedPref.getString("username","");
 
         setContentView(R.layout.activity_safety_view);
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle(username);
@@ -85,7 +86,12 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         g = Globals.getInstance();
 
         t = (TextView) findViewById(R.id.textView);
-        t.setText(username+", you are safe!");
+        // Get the first name if the user provided first and last name
+        String firstName = username;
+        if(firstName.contains(" ")){
+            firstName = firstName.substring(0, firstName.indexOf(" "));
+        }
+        t.setText(firstName+", you are safe!");
 
         SOSPushButton = findViewById(R.id.button_push_sos);
 

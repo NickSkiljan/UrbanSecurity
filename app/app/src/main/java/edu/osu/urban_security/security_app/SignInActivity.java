@@ -117,6 +117,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         final String name = mNameField.getText().toString();
         final String phoneNumber = mPhoneField.getText().toString();
 
+        // Set username in SharedPreferences to user's name specified in mNameField
+        sharedPref= getSharedPreferences("myPref", Context.MODE_PRIVATE);
+        editor=sharedPref.edit();
+
+        String username = mNameField.getText().toString();
+        editor.putString("username",username);
+        editor.commit();
 
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -126,6 +133,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                             Log.d(TAG, "signInAnonymously: success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Log.d(TAG, "onComplete: " + user.getUid());
+
                             writeNewUser(user.getUid(), name, phoneNumber);
                             Log.d(TAG, "onComplete: name: " + name);
                             Log.d(TAG, "onComplete: phone#: " + phoneNumber);
@@ -174,12 +182,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         };
         mDatabase.addListenerForSingleValueEvent(userListener);
 
-        sharedPref= getSharedPreferences("myPref", Context.MODE_PRIVATE);
-        editor=sharedPref.edit();
 
-        String username = mNameField.getText().toString();
-        editor.putString("username",username);
-        editor.commit();
 
         // Go to Main Activity
         startActivity(new Intent(SignInActivity.this, SafetyViewActivity.class));

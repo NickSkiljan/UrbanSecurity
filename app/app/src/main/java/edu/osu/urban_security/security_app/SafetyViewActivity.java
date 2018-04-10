@@ -75,6 +75,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         String username=sharedPref.getString("username","");
 
         setContentView(R.layout.activity_safety_view);
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle(username);

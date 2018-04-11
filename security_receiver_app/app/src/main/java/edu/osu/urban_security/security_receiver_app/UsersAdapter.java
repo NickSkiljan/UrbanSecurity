@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import javax.crypto.SecretKey;
 
 public class UsersAdapter extends ArrayAdapter<User> {
     public UsersAdapter(Context context, ArrayList<User> users) {
@@ -27,8 +30,17 @@ public class UsersAdapter extends ArrayAdapter<User> {
         TextView tvLatitude = (TextView) convertView.findViewById(R.id.tvLatitude);
         TextView tvLongitude = (TextView) convertView.findViewById(R.id.tvLongitude);
         TextView tvAltitude = (TextView) convertView.findViewById(R.id.tvAltitude);
+        AES aes = new AES();
+        String username = "test";
+        try {
+            SecretKey key = aes.generateKey();
+            username = AES.decryptString(key, user.name);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // Populate the data into the template view using the data object
-        tvName.setText(user.name);
+        tvName.setText(username);
         tvLatitude.setText("Lat: " + user.latitude);
         tvLongitude.setText("Long: " + user.longitude);
         tvAltitude.setText("Alt: " + user.altitude);

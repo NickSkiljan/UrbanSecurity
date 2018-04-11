@@ -1,8 +1,14 @@
 package edu.osu.urban_security.security_receiver_app;
 
+import android.util.Log;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.sql.Timestamp;
+
+import javax.crypto.SecretKey;
+
+import static android.content.ContentValues.TAG;
 
 @IgnoreExtraProperties
 public class User {
@@ -32,31 +38,32 @@ public class User {
         this.address = address;
         this.privateKey = privateKey;
 
-        this.decrypt(privateKey);
+        //this.decrypt(privateKey);
     }
 
 
-    public void decrypt(byte[] privateKey) {
+    public void decrypt(SecretKey privateKey, AES obj) throws Exception {
 
-        /*AES obj = new AES();
 
-        byte[] decryptedName = obj.decrypt(privateKey, this.name);
-        this.name = new String(decryptedName);
+        String decryptedName = obj.decryptString(privateKey, this.name);
+        this.name = decryptedName;
+        Log.d(TAG, "decrypt: " + decryptedName);
 
-        byte[] decryptedLatitude = obj.decrypt(privateKey, this.latitude);
+
+        String decryptedLatitude = obj.decryptString(privateKey, this.latitude);
         this.latitude = new String(decryptedLatitude);
 
-        byte[] decryptedLongitude = obj.decrypt(privateKey, this.longitude);
+        String decryptedLongitude = obj.decryptString(privateKey, this.longitude);
         this.longitude = new String(decryptedLongitude);
 
-        byte[] decryptedAltitude = obj.decrypt(privateKey, this.altitude);
+        String decryptedAltitude = obj.decryptString(privateKey, this.altitude);
         this.altitude = new String(decryptedAltitude);
 
-        byte[] decryptedPhoneNumber = obj.decrypt(privateKey, this.phone_number);
+        String decryptedPhoneNumber = obj.decryptString(privateKey, this.phone_number);
         this.phone_number = new String(decryptedPhoneNumber);
 
-        byte[] decryptedAddress = obj.decrypt(privateKey, this.address);
-        this.address = new String(decryptedAddress);*/
+        String decryptedAddress = obj.decryptString(privateKey, this.address);
+        this.address = new String(decryptedAddress);
 
     }
 }

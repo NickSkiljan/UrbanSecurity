@@ -29,6 +29,7 @@ public class Globals {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
+
     /**
      * Singleton instance instantiation
      * @return instance of globals.

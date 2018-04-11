@@ -23,6 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -131,8 +134,20 @@ public class MainActivity extends AppCompatActivity {
                 //Extract user data
                 User user = (User) listView.getItemAtPosition(i);
                 String name = user.name;
-                String latitude = user.latitude;
-                String longitude = user.longitude;
+                String encryptedLatitude = user.latitude;
+                String encryptedLongitude = user.longitude;
+                String latitude = "";
+                String longitude = "";
+
+                //Decrypt latitude and longitude
+                AES aes = new AES();
+                try {
+                    SecretKey key = new SecretKeySpec(AES.AESSecretKeyInBytes, 0, AES.AESSecretKeyInBytes.length, "AES");
+                    latitude = AES.decryptString(key, encryptedLatitude);
+                    longitude = AES.decryptString(key, encryptedLongitude);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 //Log click
                 Log.d(TAG, "Clicked on SOS");

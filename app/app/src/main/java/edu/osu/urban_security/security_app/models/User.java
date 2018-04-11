@@ -37,8 +37,8 @@ public class User {
     public User(String name, String phoneNumber, byte[] encryptedAESKey, AES aes, SecretKey AESKey) {
         try {
 
-            this.name = new String(aes.encrypt(AESKey, name.getBytes()));
-            this.phoneNumber = new String(aes.encrypt(AESKey, phoneNumber.getBytes()));
+            this.name = new String(aes.encryptToString(AESKey, name.getBytes()));
+            this.phoneNumber = new String(aes.encryptToString(AESKey, phoneNumber.getBytes()));
             this.latitude = "n/a";
             this.longitude = "n/a";
             this.altitude = "n/a";

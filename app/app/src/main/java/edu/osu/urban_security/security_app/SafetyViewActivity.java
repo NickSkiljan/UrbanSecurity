@@ -243,17 +243,17 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                                     byte[] AESKey = user.key.getBytes();
                                     SecretKey key = new SecretKeySpec(AESKey, 0, AESKey.length, "AES");
                                     // Encrypt GeoLocation
-                                    byte[] encryptedLat = AES.encrypt(key, lat.getBytes());
-                                    byte[] encryptedLng = AES.encrypt(key, lng.getBytes());
-                                    byte[] encryptedAlt = AES.encrypt(key, alt.getBytes());
-                                    user.latitude = new String(encryptedLat);
-                                    user.longitude = new String(encryptedLng);
-                                    user.altitude = new String(encryptedAlt);
+//                                    byte[] encryptedLat = AES.encrypt(key, lat.getBytes());
+//                                    byte[] encryptedLng = AES.encrypt(key, lng.getBytes());
+//                                    byte[] encryptedAlt = AES.encrypt(key, alt.getBytes());
+                                    user.latitude = AES.encryptToString(key, lat.getBytes());
+                                    user.longitude = AES.encryptToString(key, lng.getBytes());
+                                    user.altitude = AES.encryptToString(key, alt.getBytes());
                                     /* [TEST] Manually test decryption locally */
                                     Log.d(TAG, "onSuccess: Pushing encrypted location to Firebase...");
-                                    Log.d(TAG, "onSuccess: Latitude = " + new String(AES.decrypt(key, encryptedLat)) );
-                                    Log.d(TAG, "onSuccess: Longitude = " + new String(AES.decrypt(key, encryptedLng)) );
-                                    Log.d(TAG, "onSuccess: Altitude = " + new String(AES.decrypt(key, encryptedAlt)) );
+                                    Log.d(TAG, "onSuccess: Latitude = " + new String(AES.decryptString(key, user.latitude)) );
+                                    Log.d(TAG, "onSuccess: Longitude = " + new String(AES.decryptString(key, user.longitude)) );
+                                    Log.d(TAG, "onSuccess: Altitude = " + new String(AES.decryptString(key, user.altitude)) );
                                     /* [END TEST] */
                                     // Push user information to Firebase
                                     mDatabase.child("users").child(mAuth.getUid()).setValue(user);

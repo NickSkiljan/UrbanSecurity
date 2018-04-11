@@ -16,6 +16,29 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
+    public static String bytesToHex(byte[] bytes) {
+        final char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+        char[] hexChars = new char[bytes.length * 2];
+        int v;
+        for ( int j = 0; j < bytes.length; j++ ) {
+            v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
+
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
@@ -28,7 +51,10 @@ public class ExampleUnitTest {
         SecretKey key = obj.generateKey();
         byte[] messageToByte = message.getBytes();
         byte[] encryptedData = obj.encrypt(key,messageToByte);
-        byte[] decryptedData = obj.decrypt(key,encryptedData);
+//        String encMsg = new String(encryptedData);
+        String encMsg = bytesToHex(encryptedData);
+
+        byte[] decryptedData = obj.decrypt(key,hexStringToByteArray(encMsg));
         String decryptedMessage = new String(decryptedData);
         assertEquals(message, decryptedMessage);
     }

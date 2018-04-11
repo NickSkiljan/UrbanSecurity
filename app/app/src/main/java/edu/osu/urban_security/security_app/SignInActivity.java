@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import edu.osu.urban_security.security_app.models.Globals;
 import edu.osu.urban_security.security_app.models.User;
@@ -226,6 +227,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             // Encrypted AES key using RSA key
 //            byte[] encryptedKey = encryption.encrypt(encodedKey);
             // Push user to Firebase
+            key = new SecretKeySpec(g.AESSecretKeyInBytes, 0, g.AESSecretKeyInBytes.length, "AES");
             User user = new User(name, phoneNumber, encodedKey, aes, key);
             mDatabase.child("users").child(userId).setValue(user);
             Log.d(TAG, "writeNewUser: Wrote user to Firebase");

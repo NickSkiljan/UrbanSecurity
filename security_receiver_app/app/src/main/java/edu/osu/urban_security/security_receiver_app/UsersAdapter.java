@@ -11,8 +11,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 public class UsersAdapter extends ArrayAdapter<User> {
+    public byte[] AESSecretKeyInBytes = {-34, 86, -34, 74, 119, 119, -64, -46, 86, 93, 55, -117, 52, -19, 4, 94};
+
     public UsersAdapter(Context context, ArrayList<User> users) {
         super(context, 0, users);
     }
@@ -33,7 +36,7 @@ public class UsersAdapter extends ArrayAdapter<User> {
         AES aes = new AES();
         String username = "test";
         try {
-            SecretKey key = aes.generateKey();
+            SecretKey key = new SecretKeySpec(AESSecretKeyInBytes, 0, AESSecretKeyInBytes.length, "AES");
             username = AES.decryptString(key, user.name);
 
         } catch (Exception e) {

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     //Create empty list of users
     private ArrayList<User> SOSs = new ArrayList<>();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

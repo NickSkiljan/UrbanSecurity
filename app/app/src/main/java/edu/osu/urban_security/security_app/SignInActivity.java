@@ -134,8 +134,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                             Log.d(TAG, "signInAnonymously: success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Log.d(TAG, "onComplete: " + user.getUid());
+                            if (!name.equals(mNameField.getText().toString())) {
+                                writeNewUser(user.getUid(), mNameField.getText().toString(), mPhoneField.getText().toString());
+                            } else {
+                                writeNewUser(user.getUid(), name, phoneNumber);
+                            }
 
-                            writeNewUser(user.getUid(), name, phoneNumber);
                             Log.d(TAG, "onComplete: name: " + name);
                             Log.d(TAG, "onComplete: phone#: " + phoneNumber);
                             onAuthSuccess();
@@ -227,7 +231,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             // Encrypted AES key using RSA key
 //            byte[] encryptedKey = encryption.encrypt(encodedKey);
             // Push user to Firebase
-            key = new SecretKeySpec(g.AESSecretKeyInBytes, 0, g.AESSecretKeyInBytes.length, "AES");
+            key = new SecretKeySpec(AES.AESSecretKeyInBytes, 0, AES.AESSecretKeyInBytes.length, "AES");
             User user = new User(name, phoneNumber, encodedKey, aes, key);
             mDatabase.child("users").child(userId).setValue(user);
             Log.d(TAG, "writeNewUser: Wrote user to Firebase");

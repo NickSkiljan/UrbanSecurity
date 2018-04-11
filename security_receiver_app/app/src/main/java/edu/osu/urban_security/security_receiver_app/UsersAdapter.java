@@ -14,7 +14,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 public class UsersAdapter extends ArrayAdapter<User> {
-    public byte[] AESSecretKeyInBytes = {-34, 86, -34, 74, 119, 119, -64, -46, 86, 93, 55, -117, 52, -19, 4, 94};
+
+
 
     public UsersAdapter(Context context, ArrayList<User> users) {
         super(context, 0, users);
@@ -34,19 +35,25 @@ public class UsersAdapter extends ArrayAdapter<User> {
         TextView tvLongitude = (TextView) convertView.findViewById(R.id.tvLongitude);
         TextView tvAltitude = (TextView) convertView.findViewById(R.id.tvAltitude);
         AES aes = new AES();
-        String username = "test";
+        String username = "default";
+        String latitude = "default";
+        String longitude = "default";
+        String altitude = "default";
         try {
-            SecretKey key = new SecretKeySpec(AESSecretKeyInBytes, 0, AESSecretKeyInBytes.length, "AES");
+            SecretKey key = new SecretKeySpec(AES.AESSecretKeyInBytes, 0, AES.AESSecretKeyInBytes.length, "AES");
             username = AES.decryptString(key, user.name);
+            latitude = AES.decryptString(key, user.latitude);
+            longitude = AES.decryptString(key, user.longitude);
+            altitude = AES.decryptString(key, user.altitude);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         // Populate the data into the template view using the data object
         tvName.setText(username);
-        tvLatitude.setText("Lat: " + user.latitude);
-        tvLongitude.setText("Long: " + user.longitude);
-        tvAltitude.setText("Alt: " + user.altitude);
+        tvLatitude.setText("Lat: " + latitude);
+        tvLongitude.setText("Long: " + longitude);
+        tvAltitude.setText("Alt: " + altitude);
         // Return the completed view to render on screen
         return convertView;
     }

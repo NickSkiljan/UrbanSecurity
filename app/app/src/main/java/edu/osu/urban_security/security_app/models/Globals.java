@@ -29,7 +29,6 @@ public class Globals {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
-    public byte[] AESSecretKeyInBytes = {-34, 86, -34, 74, 119, 119, -64, -46, 86, 93, 55, -117, 52, -19, 4, 94};
 
     /**
      * Singleton instance instantiation

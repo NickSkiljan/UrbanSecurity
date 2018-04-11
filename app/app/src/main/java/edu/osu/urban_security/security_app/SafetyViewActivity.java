@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -181,6 +183,11 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
             case R.id.sign_out:
                 signOut();
+
+//                // timeInMills
+//                SystemClock.sleep(1000);
+//                // EXIT app
+//                System.exit(1);
                 return true;
 
             default:
@@ -240,8 +247,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 //                                    RSA encryption = new RSA();
 //                                    byte[] AESKey = encryption.decrypt(user.key));
                                     // Convert key back to SecretKey
-                                    byte[] AESKey = user.key.getBytes();
-                                    SecretKey key = new SecretKeySpec(AESKey, 0, AESKey.length, "AES");
+                                    SecretKey key = new SecretKeySpec(AES.AESSecretKeyInBytes, 0, AES.AESSecretKeyInBytes.length, "AES");
                                     // Encrypt GeoLocation
 //                                    byte[] encryptedLat = AES.encrypt(key, lat.getBytes());
 //                                    byte[] encryptedLng = AES.encrypt(key, lng.getBytes());
@@ -251,18 +257,22 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
                                     user.altitude = AES.encryptToString(key, alt.getBytes());
                                     /* [TEST] Manually test decryption locally */
                                     Log.d(TAG, "onSuccess: Pushing encrypted location to Firebase...");
-                                    Log.d(TAG, "onSuccess: Latitude = " + new String(AES.decryptString(key, user.latitude)) );
-                                    Log.d(TAG, "onSuccess: Longitude = " + new String(AES.decryptString(key, user.longitude)) );
-                                    Log.d(TAG, "onSuccess: Altitude = " + new String(AES.decryptString(key, user.altitude)) );
+                                    Log.d(TAG, "onSuccess: Latitude = " + AES.decryptString(key, user.latitude));
+                                    Log.d(TAG, "onSuccess: Longitude = " + AES.decryptString(key, user.longitude));
+                                    Log.d(TAG, "onSuccess: Altitude = " + AES.decryptString(key, user.altitude));
                                     /* [END TEST] */
                                     // Push user information to Firebase
                                     mDatabase.child("users").child(mAuth.getUid()).setValue(user);
                                 } catch (Exception e) {
                                     Log.e(TAG, "onSuccess: Failure encrypting location...");
+                                    Toast.makeText(getApplicationContext(), "Failure encrypting location!",
+                                            Toast.LENGTH_LONG).show();
                                     e.printStackTrace();
                                 }
                             } else {
                                 Log.d(TAG, "onSuccess: Location or user null. Try opening Google Maps and then try pushing the button again.");
+                                Toast.makeText(getApplicationContext(), "Location not found: Open Google Maps and try again!",
+                                        Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -276,6 +286,8 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void signOut() {
+        Toast.makeText(getApplicationContext(), "Signing out...",
+                Toast.LENGTH_LONG).show();
         mAuth.signOut();
         Intent intent_1 = new Intent(this, SignInActivity.class);
         startActivity(intent_1);

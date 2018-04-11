@@ -51,12 +51,6 @@ public class ExampleUnitTest {
         SecretKey key = obj.generateKey();
         byte[] keyBytes = key.getEncoded();
 
-
-        System.out.println(java.util.Arrays.toString(keyBytes));
-        byte[] newKeyBytes = {-34, 86, -34, 74, 119, 119, -64, -46, 86, 93, 55, -117, 52, -19, 4, 94};
-        SecretKey newKey = new SecretKeySpec(newKeyBytes, 0, keyBytes.length, "AES");
-        assertEquals(java.util.Arrays.toString(keyBytes),java.util.Arrays.toString(newKey.getEncoded()) );
-
         byte[] messageToByte = message.getBytes();
         byte[] encryptedData = obj.encrypt(key,messageToByte);
 //        String encMsg = new String(encryptedData);
@@ -68,6 +62,20 @@ public class ExampleUnitTest {
         System.out.println(encMsg);
         System.out.println(encMsg.length());
         assertEquals(message, decryptedMessage);
+    }
+
+    @Test
+    public void Convert_Key_to_Bytes_and_Back() throws Exception {
+        String message = "Maxwell";
+        AES obj = new AES();
+        SecretKey key = obj.generateKey();
+        byte[] keyBytes = key.getEncoded();
+
+
+        System.out.println(java.util.Arrays.toString(keyBytes));
+        byte[] newKeyBytes = {-34, 86, -34, 74, 119, 119, -64, -46, 86, 93, 55, -117, 52, -19, 4, 94};
+        SecretKey newKey = new SecretKeySpec(newKeyBytes, 0, keyBytes.length, "AES");
+        assertEquals(java.util.Arrays.toString(keyBytes),java.util.Arrays.toString(newKey.getEncoded()) );
     }
 
     @Test

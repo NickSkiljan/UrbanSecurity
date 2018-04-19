@@ -21,7 +21,10 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-
+/**
+ * Authors: Andrew and Joe on 4/10/2018.
+ * Class allows us to generate an RSA key and encrypt and decrypt with it.
+ */
 public class RSA {
     private Cipher cipher1; private Cipher cipher2;
     private KeyPairGenerator generator;

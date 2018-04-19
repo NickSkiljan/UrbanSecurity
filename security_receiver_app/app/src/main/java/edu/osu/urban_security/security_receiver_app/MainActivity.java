@@ -26,6 +26,11 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Authors: Nick, Sunny, Maxwell
+ * Activity that controls our only view. Allows receiver to see decrypted sos-user's personal
+ *   information sorted by most recent SOS.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();

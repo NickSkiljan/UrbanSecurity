@@ -9,7 +9,10 @@ import java.sql.Timestamp;
 import javax.crypto.SecretKey;
 
 import static android.content.ContentValues.TAG;
-
+/**
+ * Authors: Nick, Sunny
+ * Model for User.
+ */
 @IgnoreExtraProperties
 public class User {
 

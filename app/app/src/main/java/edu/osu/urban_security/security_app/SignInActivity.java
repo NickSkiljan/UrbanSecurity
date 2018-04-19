@@ -36,7 +36,10 @@ import edu.osu.urban_security.security_app.models.Globals;
 import edu.osu.urban_security.security_app.models.User;
 
 /**
- * Created by sunnypatel on 3/7/18.
+ * Authors: Sunny, Nick
+ * Sign In Activity. Controls the sign-in functionality of our user app. Contains 2 text fields for
+ * the user to enter their name and phonenumber. Also contain a sign-in button that will encrypt
+ * the user's information and push this information to Firebase, and then send the user to the SignInActivity
  */
 
 public class SignInActivity extends BaseActivity implements View.OnClickListener {

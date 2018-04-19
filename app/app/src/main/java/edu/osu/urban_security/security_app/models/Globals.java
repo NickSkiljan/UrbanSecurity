@@ -18,7 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.sql.Timestamp;
 
 /**
- * Created by sunnypatel on 3/27/18.
+ * Created by sunnypatel and Maxwell on 3/27/18.
+ * Singleton.
  */
 
 public class Globals {
@@ -41,13 +42,6 @@ public class Globals {
         return instance;
     }
 
-    /*
-     * TODO: Encryption should happen here
-     */
-    private String encryptString(String input){
-        String output = input;
-        return output;
-    }
     /**
      * Pushes time stamp to sos
      * Updates user location

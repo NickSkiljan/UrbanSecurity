@@ -11,33 +11,11 @@ import javax.crypto.spec.SecretKeySpec;
 import static org.junit.Assert.*;
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
+ * Authors: Andrew, Joe, Sunny
+ * Unit tests for Encryption
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
-
-    public static String bytesToHex(byte[] bytes) {
-        final char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-        char[] hexChars = new char[bytes.length * 2];
-        int v;
-        for ( int j = 0; j < bytes.length; j++ ) {
-            v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
-
-    public static byte[] hexStringToByteArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i+1), 16));
-        }
-        return data;
-    }
 
     @Test
     public void addition_isCorrect() throws Exception {
@@ -54,9 +32,9 @@ public class ExampleUnitTest {
         byte[] messageToByte = message.getBytes();
         byte[] encryptedData = obj.encrypt(key,messageToByte);
 //        String encMsg = new String(encryptedData);
-        String encMsg = bytesToHex(encryptedData);
+        String encMsg = AES.bytesToHex(encryptedData);
 
-        byte[] decryptedData = obj.decrypt(key,hexStringToByteArray(encMsg));
+        byte[] decryptedData = obj.decrypt(key,AES.hexStringToByteArray(encMsg));
         String decryptedMessage = new String(decryptedData);
 
         System.out.println(encMsg);
@@ -113,7 +91,7 @@ public class ExampleUnitTest {
         String decrypt_key = new String(decryptedMessage);
         assertEquals(key_string, decrypt_key);
     }
-    /*
+
     @Test
     public void RSA_encryption_of_AES() throws Exception {
         AES aes = new AES();
@@ -124,24 +102,10 @@ public class ExampleUnitTest {
         RSA encryption = new RSA();
         // Encrypted AES key using RSA key
         byte[] encryptedKey = encryption.encrypt(encodedKey);
-//        String keyString = new String(encryptedKey, "Latin-1");
-//        String keyString = encoder.encodeToString(encryptedKey);
-
-//        String keyString = Base64.encodeToString(encryptedKey, Base64.NO_WRAP);
-//        System.err.println(keyString == null);
-//        String keyString = Base64.encodeBase64String(encryptedKey);
-
-
-//        String keyString = new String(encryptedKey, "ISO_8859_1");
-        // Decrypt AES key_string using RSA key
-//        byte[] keyStringGetBytes = Base64.decodeBase64(keyString);
-//        byte[] keyStringGetBytes = Base64.decode(keyString, Base64.NO_WRAP);
-//        byte[] keyStringGetBytes = decoder.decode(keyString);
-        byte[] decryptedKey = encryption.decrypt(keyStringGetBytes);
+        byte[] decryptedKey = encryption.decrypt(encryptedKey);
 
         assertEquals(new String(encodedKey), new String(decryptedKey));
     }
-    */
 
     @Test
     public void RSA_encryption_of_AES_then_encrypt() throws Exception {
@@ -164,13 +128,4 @@ public class ExampleUnitTest {
         byte[] result = AES.encrypt(sK, "test".getBytes());
         assertEquals(new String(expected), new String(result));
     }
-
-//    @Test
-//    public void RSA_encryption_isCorrect() throws Exception {
-//        String message = "goodbye";
-//        RSA encryption = new RSA(message);
-//        String encryptedMessage = encryption.encrypt(message);
-//        String decryptedMessage = encryption.decrypt(message);
-//        assertEquals(decryptedMessage, message);
-//    }
 }

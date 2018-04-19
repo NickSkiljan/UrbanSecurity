@@ -5,7 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-
+/**
+ * Authors: Sunny
+ * Class that allows us to call get user's Firebase UID. Also allows us to show a loading icon.
+ */
 public class BaseActivity extends AppCompatActivity {
 
     private ProgressDialog mProgressDialog;

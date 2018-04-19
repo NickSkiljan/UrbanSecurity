@@ -1,7 +1,9 @@
 package edu.osu.urban_security.security_receiver_app;
 
 /**
- * Created by nicks on 4/10/2018.
+ * Authors: Andrew and Joe on 4/10/2018.
+ * Class allows us to generate an AES key and encrypt and decrypt with it. Also allows us convert
+ * the data to a Firebase friendly format and back.
  */
 
 import java.security.NoSuchAlgorithmException;

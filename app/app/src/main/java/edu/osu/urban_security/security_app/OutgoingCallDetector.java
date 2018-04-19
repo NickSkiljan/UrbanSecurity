@@ -10,7 +10,10 @@ import android.util.Log;
 
 import edu.osu.urban_security.security_app.models.Globals;
 
-
+/**
+ * Authors: Maxwell
+ * Class that listens for if the user is calling the specified phone number and pushes sos-user info
+ */
 public class OutgoingCallDetector {
 
     private SharedPreferences sharedPreferences;

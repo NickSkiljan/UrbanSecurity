@@ -12,7 +12,11 @@ import java.util.ArrayList;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-
+/**
+ * Authors: Nick, Sunny, Maxwell
+ * Adapter for our recycler view that allows us to populate the recycler view with decrypted
+ *   sos-user's personal information
+ */
 public class UsersAdapter extends ArrayAdapter<User> {
 
 

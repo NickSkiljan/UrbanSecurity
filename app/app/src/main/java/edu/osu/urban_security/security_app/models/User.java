@@ -11,7 +11,8 @@ import javax.crypto.SecretKey;
 import edu.osu.urban_security.security_app.AES;
 
 /**
- * Created by sunnypatel on 3/7/18.
+ * Created by sunnypatel, Nick on 3/7/18.
+ * Model for User
  */
 
 @IgnoreExtraProperties
@@ -33,7 +34,7 @@ public class User {
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
-
+    // Constructors are overloaded to allow for expansion if we find a free way to get address and moving information
     public User(String name, String phoneNumber, byte[] encryptedAESKey, AES aes, SecretKey AESKey) {
         try {
 

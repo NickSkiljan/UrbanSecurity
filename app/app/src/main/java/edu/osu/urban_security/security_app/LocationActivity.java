@@ -12,7 +12,10 @@ import android.widget.TextView;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-
+/**
+ * Authors: Maxwell
+ * Testing Class that allows us to get user's location
+ */
 public class LocationActivity extends AppCompatActivity {
 
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;

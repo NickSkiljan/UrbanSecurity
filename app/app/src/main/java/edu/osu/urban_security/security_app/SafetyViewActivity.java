@@ -44,7 +44,11 @@ import javax.crypto.spec.SecretKeySpec;
 
 import edu.osu.urban_security.security_app.models.Globals;
 import edu.osu.urban_security.security_app.models.User;
-
+/**
+ * Authors: Dane, Sunny, Maxwell
+ * Safety View Activity. Controls the main functionality of our user app. Contains a button that,
+ *  if pushed, will call "911" or the testing number and will push encrypted sos-user info to Firebase.
+ */
 public class SafetyViewActivity extends AppCompatActivity implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;

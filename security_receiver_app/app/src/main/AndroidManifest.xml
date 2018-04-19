@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Author: Nick Skiljan-->
+<!--Controls overall flow of app-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.osu.urban_security.security_receiver_app">
 

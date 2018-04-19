@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Created by dsmil on 3/9/2018.
+ * Creates the About page
  */
 
 public class OptionsActivity extends AppCompatActivity {
@@ -30,12 +31,12 @@ public class OptionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
-
+        // get saved user's name
         sharedPref= getSharedPreferences("myPref", Context.MODE_PRIVATE);
         String username=sharedPref.getString("username","");
 
         setContentView(R.layout.activity_options);
-
+        // setup toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle(username);

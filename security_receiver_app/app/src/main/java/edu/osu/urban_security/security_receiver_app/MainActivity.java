@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void update() {
-
+        // Sorted by most recent
         mSOS.orderByChild("timestamp").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     DatabaseReference userId = mUsers.child(snapshot.getKey());
-
+                    // Listener that ensures data is up to date
                     userId.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
@@ -125,9 +125,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
+        // Set up Recycler view
         UsersAdapter adapter = new UsersAdapter(this, SOSs);
         final ListView listView = findViewById(R.id.lvUsers);
+        // If receiver clicks on a user, receiver should get directions to user
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

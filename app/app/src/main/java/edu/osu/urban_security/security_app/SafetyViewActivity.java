@@ -77,7 +77,7 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
         String username=sharedPref.getString("username","");
 
         setContentView(R.layout.activity_safety_view);
-
+        // setup toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle(username);
@@ -97,37 +97,13 @@ public class SafetyViewActivity extends AppCompatActivity implements View.OnClic
 
         SOSPushButton = findViewById(R.id.button_push_sos);
 
-//        ActivityCompat.requestPermissions(this,
-//                new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-//                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-//
-//        ActivityCompat.requestPermissions(this,
-//                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-//                MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-//
-//        ActivityCompat.requestPermissions(this,
-//                new String[]{android.Manifest.permission.CALL_PHONE},
-//                MY_PERMISSIONS_REQUEST_CALL_PHONE);
-//        String[] permissions = {Manifest.permission.CALL_PHONE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-//
-//        ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_CODE);
         requestPermissions();
-//        SOSPushButton.setOnClickListener(this);
-//
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-//
-//        //Create intent and start listening service
-//        Intent intent = new Intent(this, CallDetectionService.class);
-//        startService(intent);
-//
-//        updateUserLocation();
-
     }
 
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_CODE);
     }
-
+    // code that used to be onCreate but the logic needed to be reordered
     private void finishOnCreate() {
         SOSPushButton.setOnClickListener(this);
 

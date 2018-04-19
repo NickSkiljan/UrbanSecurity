@@ -41,7 +41,6 @@ public class User {
         //this.decrypt(privateKey);
     }
 
-
     public void decrypt(SecretKey privateKey, AES obj) throws Exception {
 
 

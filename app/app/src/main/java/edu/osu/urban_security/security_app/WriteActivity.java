@@ -14,6 +14,7 @@ import edu.osu.urban_security.security_app.models.User;
 
 /**
  * Created by sunnypatel on 3/9/18.
+ * Activity with a button that allows us to push the user's information to Firebase for testing.
  */
 
 public class WriteActivity extends BaseActivity implements View.OnClickListener {

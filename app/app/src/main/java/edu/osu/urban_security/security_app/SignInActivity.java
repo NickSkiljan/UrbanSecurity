@@ -82,33 +82,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-//    private void signIn() {
-//        Log.d(TAG, "signIn");
-//        if (!validateForm()) {
-//            return;
-//        }
-//
-//        showProgressDialog();
-//        String email = mEmailField.getText().toString();
-//        String password = mPasswordField.getText().toString();
-//
-//        mAuth.signInWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        Log.d(TAG, "signIn:onComplete:" + task.isSuccessful());
-//                        hideProgressDialog();
-//
-//                        if (task.isSuccessful()) {
-//                            onAuthSuccess(task.getResult().getUser());
-//                        } else {
-//                            Toast.makeText(SignInActivity.this, "Sign In Failed",
-//                                    Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//    }
-
     private void signUp() {
         Log.d(TAG, "signUp");
         if (!validateForm()) {
@@ -134,6 +107,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                             Log.d(TAG, "signInAnonymously: success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Log.d(TAG, "onComplete: " + user.getUid());
+                            // Because name HAS to be a final, this is a way to ensure the name is
+                            // updated if the user delete's their account and creates a new one
                             if (!name.equals(mNameField.getText().toString())) {
                                 writeNewUser(user.getUid(), mNameField.getText().toString(), mPhoneField.getText().toString());
                             } else {
@@ -150,21 +125,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                         }
                     }
                 });
-//        mAuth.createUserWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        Log.d(TAG, "createUser:onComplete:" + task.isSuccessful());
-//                        hideProgressDialog();
-//
-//                        if (task.isSuccessful()) {
-//                            onAuthSuccess(task.getResult().getUser());
-//                        } else {
-//                            Toast.makeText(SignInActivity.this, "Sign Up Failed",
-//                                    Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
     }
 
     private void onAuthSuccess() {
@@ -202,17 +162,32 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     private boolean validateForm() {
         boolean result = true;
-        if (TextUtils.isEmpty(mNameField.getText().toString())) {
+        String name = mNameField.getText().toString();
+        String phone = mPhoneField.getText().toString();
+        // Only check if name contains numbers in case user accidently mixes up the name and phone
+        // number field.
+        if (TextUtils.isEmpty(name)) {
             mNameField.setError("Required");
             result = false;
-        } else {
+        }
+        else if (name.matches(".*\\d+.*")) {
+            mNameField.setError("Name can't contain numbers.");
+            result = false;
+        }
+        else {
             mNameField.setError(null);
         }
 
-        if (TextUtils.isEmpty(mPhoneField.getText().toString())) {
+        // Ensure phone number contains no dashes or letters (in case user thinks this is the name field
+        if (TextUtils.isEmpty(phone)) {
             mPhoneField.setError("Required");
             result = false;
-        } else {
+        }
+        else if (!TextUtils.isDigitsOnly(phone)) {
+            mPhoneField.setError("Numbers only");
+            result = false;
+        }
+        else {
             mPhoneField.setError(null);
         }
 
@@ -221,6 +196,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     // [START basic_write]
     private void writeNewUser(String userId, String name, String phoneNumber) {
+        // Encrypt user's personal information
         AES aes = new AES();
         try {
             // AES key
@@ -247,5 +223,6 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         if (i == R.id.button_sign_up) {
             signUp();
         }
+
     }
 }

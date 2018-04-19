@@ -1,0 +1,43 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "users": {
+      "$uid": {
+        "name": {
+          ".validate": "newData.isString()"
+        },
+        "latitude": {
+          // ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+          ".validate": "newData.isString()"
+        },
+        "longitude": {
+          // ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+          ".validate": "newData.isString()"
+        },
+        "altitude": {
+          // ".validate": "newData.isNumber()"
+          ".validate": "newData.isString()"
+        },
+        "moving": {
+          ".validate": "newData.isBoolean()"
+        },
+        "phone_number": {
+          ".validate": "newData.isString()"
+        },
+        "address": {
+          ".validate": "newData.isString()"
+        },
+        "key": {
+        }
+      }
+    },
+    "sos": {
+      "$uid": {
+        "timestamp": {
+          ".validate": "newData.isString()"
+        }
+      }
+    }
+  }
+}

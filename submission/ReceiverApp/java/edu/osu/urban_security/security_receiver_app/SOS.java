@@ -3,8 +3,9 @@ package edu.osu.urban_security.security_receiver_app;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 /**
- * Created by Ravi Tamada on 07/10/16.
- * www.androidhive.info
+ * Created by Nick Skiljan
+ * Model for an SOS, which is essentially a timestamp tied to a user.
+ * This allows us to easily retrieve the SOS information from Firebase.x
  */
 
 @IgnoreExtraProperties
